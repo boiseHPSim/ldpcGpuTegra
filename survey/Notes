@@ -1,0 +1,53 @@
+LDPC on Tegra GPU
+
+Literature survey:
+
+
+"A High Throughput Efficient Approach for Decoding LDPC Codes onto GPU Devices"   \cite{art_gpu_0}
+
+GD :
+- Decoding process is applied on frames with hundreds up to thousands of lenghts. The length, the irregularity and the huge computation make the decoding
+process difficult to implement.
+- Many recent works have focused on  mapping LDPC decoders on GPU devices. Work objectives were to achive high or real-time decoding throughput for different kinds of LDPC codes(short or long frame length, regular, or irregular codes,etc).
+
+Work : 
+- It has fitted layered-schedule flooding-based algorithm on GPU devices and has gain better performances relative to similar works.
+- It has used interleaving/de-interleaving to manage faster memory access on GPU and lower the cost of it
+----------------------------------------------------------------------------------------------
+"High-Throughput LDPC Decoder on Low-Power Embedded Processors" \cite{art_neon}
+
+They have used horizontal layered-based decoding that is based on parallel decoding of a low set of frames that allows reaching high throughput while maintaining low-latency. They have used ARM Processors's SIMD and SIMT programming models to implement their algorithm. 
+
+
+----------------------------------------------------------------------------------------------
+"A reduced complexity decoder architecture via layered decoding of LDPC codes" \cite{art_layered0}
+
+Good : layered Decoding allows updated imformation to be utilized more quickly in the algorithm thus speeding up the decoding\cite{art_layered0}.
+
+work:
+They have applied a form a layered belief propogation to irregular LDPC codes to reach 2x faster convergence in a given error rate.By using this methos they have reduced memory bits usage by 45-50%.
+
+----------------------------------------------------------------------------------------------
+
+"GPU-like on-chip system for decoding LDPC codes" \cite{art_layered1}
+
+Good :
+The goal is to replace time-consuming simulations based on abstract models of the system with real-time experiments under real-world conditions. GPU-Like architecture is a promising approach to fully exploit the potential of FPGA-based acceleration platforms \cite{art_layered1}. 
+
+work:
+They proposed a GPU-based decoder that enables validating the LDPC codes at very low BER values.
+
+----------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------
+My Intorduction:
+
+Wireless Communication is going to need more complex algorithms every day. On the other hand, mobile processors should be able to support these algorithms
+with satisfying quality. One of the major buttlenecks in wireless communication is the decoding process whoch consumes considerable power on a mobile device[citation needed]. "LDPC decoding which is used in DVB-S2 mostly" (not sure how to say it), can be done in parallel and there has been studies on how to achieve high hroughput through efficient approches to implement ldpc decoding in parallel. On the other hand a considerable portion of these works have tried to use gpu devices which has shown results comparable to implementation on FPGAs. However, many highr throughput performances were obtained for costly GPU devices syck as "...". This makes those good for simulation but not applicable to mobile devices with low profile GPUs. This paper tries to achieve a high throughput implementation of an LDPC decoder on a mobile GPU.
+
+The belief propogation algorithm is typically used for decoding LDPC codes \cite{art_belief_0,art_belief_1} but there are also many variations and approximations that have been studied.
+
+Abstract:
+
+Low Density Parity Check(LDPC) code is an efficient way of communication and is beeing largely used in mobile communication. With the wide usage and having computational intensivity of LDPC decoders, there has been a lot of effort to reduce decoder's complexity and parallel implementation of it. On the other hand, recent improvements in mobile processors's architectures has made it exclusively reachable to have a real-time decoder based on a software solution. Knowing this capability, low profile GPU based decoders has been introduced that are capable of reaching high throughput by low latency. On the other hand recently there has been some work that has used ARM SIMD and SIMT programming models instead of GPU that promises satisfying quality. What this wotks miss is that a mobile processor that is used in a smart phone should support a lot of task and we can not allocate all resources to decoding prcesses. In this paper we propose a heterogeneous LDPC decoder that uses both ARM and GPU Processors of a mobile device to reach real-time effieciency. The different stages of decoder processes has been allocated to ARM and GPU based on an optimization solution. 
