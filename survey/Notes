@@ -164,7 +164,7 @@ In microarchitectures, increasing clock frequencies to obtain peorformance has r
 Mainly due to the demands for visualization technology in the games industry, the performance of graphics processing units (GPUs) has undergone increasing performances over the last decade. With many cores driven by a considerable memory bandwidth, recent GPUs are targeted for computationally intensive, multithreaded, highly parallel computation, and researchers in high-performance computing fields are applying GPUs to general-purpose applications (GPGPU) \cite{art_gpu_0,art_cuda_openmp, art_memory_coalesced, art_ldpc_OpenCl, art_optimize_0, art_layered1}. They have used Compute Unified Device Architecture (CUDA)
 from NVIDIA \cite{website_cuda} and Open Computing Language (OpenCL) platforms to develop LDPC Decoders.
 
-%ARMs
+%ARMs and NEON
 
 
 
