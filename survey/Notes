@@ -107,7 +107,7 @@ TABLE 1 "Number of Arithmetic and Memory Access Operations per Iteration for the
 
 ----------------------------------------------------------------------------------------------
 
-"Parallel LDPC decoding using CUDA and OpenMP"  \cite{art_like_me}
+"Parallel LDPC decoding using CUDA and OpenMP"  \cite{art_cuda_openmp}
 
 Good :
 
@@ -138,14 +138,37 @@ expensive multiplication operations with inexpensive addition operations.
 ----------------------------------------------------------------------------------------------
 "High-throughput multi-core LDPC decoders based on x86 processor" \cite{art_ldpc_cpu1}
 
+Good : 
+However, the drawback of high correcting efficiency comes from
+its decoding computation complexity. However, in recent years, many researchers have proposed some be
+implemented of LDPC decoders in software on multicore or many-core devices to meet for instance, Software
+Defined Radio flexibility requirements.
 
 ----------------------------------------------------------------------------------------------
 
 "My Intorduction"
 
-Originally proposed by Robert Gallager in 1962 \cite{art_gallager} and rediscovered by MacKay and Neal in 1996 \cite{art_macKay} Low Density Parity Check (LDPC) codes have been adopted by a wide range of applications including many communication system standards such as WiFi(IEEE 802.11n), 10 Gbit Ethernet (IEEE 802.3an), WiMAX (IEEE 802.16e), and DVB-S2.
-Although LDPC codes have excellent error correcting capability, to date there exist no known mathematical tools to accurately evaluate their performance.
-Thus, a resort is typically made to simulations using computers or dedicated hardware \cite{art_memory_coalesced}.
+% LDPC , Usages, Complexity
+Originally proposed by Robert Gallager in 1962 \cite{art_gallager} and rediscovered by MacKay and Neal in 1996 \cite{art_macKay} Low Density Parity Check (LDPC) codes have been adopted by a wide range of applications including many communication system standards such as WiFi(IEEE 802.11n), 10 Gbit Ethernet (IEEE 802.3an), WiMAX (IEEE 802.16e), and DVB-S2. Recently, Chung and Richardson \cite{art_shannon} showed that the LDPC code can approach the Shannon limit to within 0.0045 dB. However, the drawback of high correcting efficiency comes from its decoding computation complexity \cite{art_ldpc_cpu1} and to date there exist no known mathematical tools to accurately evaluate their performance. Thus, a resort is typically made to simulations using computers or dedicated hardware \cite{art_memory_coalesced}.
+
+% Initial implementation
+LDPC decoding algorithms are compute-intensive and need powerful computer architecture to convey low latency and high decoding rate which caused to be initially implemented using application-specific integrated circuits(ASIC) and field-programmable gate array(FPGA) circuits \cite{art_ldpc_OpenCl_1}. However, their high speed often comes at a price of high developement cost and low programming flexibility \cite{art_convolutional} and it is very challenging to design decoder hardware that supports various standards and multiple data rates \cite{art_like_cuda_openmp}. On the other hand, iterative LDPC decoding schemes based on the sum-product algorithm (SPA) can fully be parallelized, leading to high-speed decoding \cite{art_shannon}. For these reasons, designers have recently focused on software implementations of LDPC decoders on multi/many-core devicdes \cite{art_massively} to achieve requirements through Software Defined Radio (SDR) Systems.
+
+% Availabe multi-core architectures
+As in terms of multicore architectures, researchers have used CPUs \cite{art_cpu_gpu, art_ldpc_cpu0}, GPUs \cite{art_memory_coalesced, art_massively, art_optimize_0}and ARM \cite{art_ldpc_cpu0, art_neon} architectures to develop high throughput, low latency SDR systems. 
+
+%CPUs
+In microarchitectures, increasing clock frequencies to obtain peorformance has reached a limit, so to hold this increase, other techniques based on parallel processing is being investigated \cite{art_ldpc_cpu1}. Todays' multicore architectures support SIMD (Single Instruction Multiple Data), SPMD(Single Programm Multiple Data) and SIMT(Single Instruction Multiple Threads). The general purpose multicore processors replicate a single core in a homogeneous way, typically with a x86 instruction set, and provide shared memory hardware mechanisms\cite{art_massively}. They can be programmed at a high level by using different software technologies \cite{art_multicore_techs}. OpenMP \cite{art_openMp_book} provides an effective and relatively straightforward approach for programming general-purpose multicores. On the other hand newer microarchitectures are trying to provide larger SIMD units for vector processing like SSE, AVX and AVX2 \cite{art_intel_sse} on Intel Architectures. In \cite{art_ldpc_cpu1}, the authors have used Intel SSE/AVX2 SIMD Units to effieciently implement a high throughput LDPC decoder. In \cite{art_cuda_openmp}, OpenMp is used to generate address patterns with parity check H-matrix.
+
+%GPUs
+Mainly due to the demands for visualization technology in the games industry, the performance of graphics processing units (GPUs) has undergone increasing performances over the last decade. With many cores driven by a considerable memory bandwidth, recent GPUs are targeted for computationally intensive, multithreaded, highly parallel computation, and researchers in high-performance computing fields are applying GPUs to general-purpose applications (GPGPU) \cite{art_gpu_0,art_cuda_openmp, art_memory_coalesced, art_ldpc_OpenCl, art_optimize_0, art_layered1}. They have used Compute Unified Device Architecture (CUDA)
+from NVIDIA \cite{website_cuda} and Open Computing Language (OpenCL) platforms to develop LDPC Decoders.
+
+%ARMs
+
+
+
+
 
 Wireless Communication is going to need more complex algorithms every day. On the other hand, mobile processors should be able to support these algorithms
 with satisfying quality. One of the major buttlenecks in wireless communication is the decoding process whoch consumes considerable power on a mobile device[citation needed]. "LDPC decoding which is used in DVB-S2 mostly" (not sure how to say it), can be done in parallel and there has been studies on how to achieve high hroughput through efficient approches to implement ldpc decoding in parallel. On the other hand a considerable portion of these works have tried to use gpu devices which has shown results comparable to implementation on FPGAs. However, many highr throughput performances were obtained for costly GPU devices syck as "...". This makes those good for simulation but not applicable to mobile devices with low profile GPUs. This paper tries to achieve a high throughput implementation of an LDPC decoder on a mobile GPU.
@@ -168,7 +191,7 @@ The belief propogation algorithm is typically used for decoding LDPC codes \cite
 
 % ARM Algorithms and NEON
 
-\cite{art_ldpc_cpu0}
+\cite{art_ldpc_cpu0, art_neon}
 
 
 
