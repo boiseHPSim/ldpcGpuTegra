@@ -321,7 +321,6 @@ doi={10.1109/4234.905935},
 ISSN={1089-7798}, 
 month={Feb},}
 
-
 @Article{art_like_me,
 author="Park, Joo-Yul
 and Chung, Ki-Seok",
@@ -335,5 +334,45 @@ abstract="Digital mobile communication technologies, such as next generation mob
 issn="1687-1499",
 doi="10.1186/1687-1499-2011-172",
 url="http://dx.doi.org/10.1186/1687-1499-2011-172"
+}
+
+
+@INPROCEEDINGS{art_ldpc_cpu0, 
+author={S. Grönroos and J. Björkqvist}, 
+booktitle={Global Conference on Signal and Information Processing (GlobalSIP), 2013 IEEE}, 
+title={Performance evaluation of LDPC decoding on a general purpose mobile CPU}, 
+year={2013}, 
+pages={1278-1281}, 
+keywords={channel coding;graphics processing units;mobile computing;parity check codes;performance evaluation;LDPC decoding;building block;channel decoding;general purpose mobile CPU;graphics processing unit;low density parity check;mobile CPU;mobile platform;performance evaluation;telecommunication systems;Decoding;Digital video broadcasting;Graphics processing units;Mobile communication;Parity check codes;Standards;Throughput;ARM;LDPC;NEON;SDR}, 
+doi={10.1109/GlobalSIP.2013.6737142}, 
+month={Dec},}
+
+@ARTICLE{art_ldpc_cpu1, 
+author={B. Le Gal and C. Jego}, 
+journal={IEEE Transactions on Parallel and Distributed Systems}, 
+title={High-throughput multi-core LDPC decoders based on x86 processor}, 
+year={2015}, 
+volume={PP}, 
+number={99}, 
+pages={1-1}, 
+keywords={Decoding;Graphics processing units;Iterative decoding;Processor scheduling;Throughput;GPU;LDPC decoding;SIMD architecture;Software Define Radio (SDR);software decoders;throughput;x86 processor}, 
+doi={10.1109/TPDS.2015.2435787}, 
+ISSN={1045-9219}, 
+month={},}
+
+@Article{art_cpu_gpu,
+author="Gr{\"o}nroos, Stefan
+and Nybom, Kristian
+and Bj{\"o}rkqvist, Jerker",
+title="Efficient GPU and CPU-based LDPC decoders for long codewords",
+journal="Analog Integrated Circuits and Signal Processing",
+year="2012",
+volume="73",
+number="2",
+pages="583--595",
+abstract="The next generation DVB-T2, DVB-S2, and DVB-C2 standards for digital television broadcasting specify the use of low-density parity-check (LDPC) codes with codeword lengths of up to 64800 bits. The real-time decoding of these codes on general purpose computing hardware is useful for completely software defined receivers, as well as for testing and simulation purposes. Modern graphics processing units (GPUs) are capable of massively parallel computation, and can in some cases, given carefully designed algorithms, outperform general purpose CPUs (central processing units) by an order of magnitude or more. The main problem in decoding LDPC codes on GPU hardware is that LDPC decoding generates irregular memory accesses, which tend to carry heavy performance penalties (in terms of efficiency) on GPUs. Memory accesses can be efficiently parallelized by decoding several codewords in parallel, as well as by using appropriate data structures. In this article we present the algorithms and data structures used to make log-domain decoding of the long LDPC codes specified by the DVB-T2 standard---at the high data rates required for television broadcasting---possible on a modern GPU. Furthermore, we also describe a similar decoder implemented on a general purpose CPU, and show that high performance LDPC decoders are also possible on modern multi-core CPUs.",
+issn="1573-1979",
+doi="10.1007/s10470-012-9895-7",
+url="http://dx.doi.org/10.1007/s10470-012-9895-7"
 }
 

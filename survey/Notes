@@ -109,17 +109,34 @@ TABLE 1 "Number of Arithmetic and Memory Access Operations per Iteration for the
 
 "Parallel LDPC decoding using CUDA and OpenMP"  \cite{art_like_me}
 
-Furthermore, iterative LDPC decoding schemes
-based on the sum-product algorithm (SPA) can fully be
-parallelized, leading to high-speed decoding \cite{art_shannon}. For
-these reasons, LDPC coding is widely regarded as a very
-attractive coding technique for high-speed 4G wireless
-communications.
+Good :
+
+- Furthermore, iterative LDPC decoding schemes based on the sum-product algorithm (SPA) can fully be
+parallelized, leading to high-speed decoding \cite{art_shannon}. For these reasons, LDPC coding is widely regarded as a very attractive coding technique for high-speed 4G wireless communications.
+
+- However, it is very challenging to design decoder hardware that supports various standards and multiple data rates.
+- Most practical LDPC decoders use soft-decisions, because soft-decision decoders typically outperform hard-decision ones.
+- times. Typically, there are two ways to deliver messages in LDPC decoding. One is to use probabilities, and the
+other is to use log-likelihood ratios (LLRs). In general, using LLRs is favored since that allows us to replace
+expensive multiplication operations with inexpensive addition operations.
+
+
 
 ----------------------------------------------------------------------------------------------
 
 "On the design of low-density parity-check codes within 0.0045 dB of the Shannon limit" \cite{art_shannon}
 
+
+----------------------------------------------------------------------------------------------
+
+"Performance Evaluation of LDPC Decoding on a General Purpose Mobile CPU" \cite{art_ldpc_cpu0}
+
+----------------------------------------------------------------------------------------------
+
+"Efficient GPU and CPU-based LDPC decoders for long codewords" \cite{art_cpu_gpu}
+
+----------------------------------------------------------------------------------------------
+"High-throughput multi-core LDPC decoders based on x86 processor" \cite{art_ldpc_cpu1}
 
 
 ----------------------------------------------------------------------------------------------
@@ -139,8 +156,9 @@ The belief propogation algorithm is typically used for decoding LDPC codes \cite
 
 % Reducing Complexity of Decoding Algorithm
 
-%CPU Based Algorithms
+%CPU Based Algorithms and SSE and OpenMP
 
+\cite{art_cpu_gpu, art_ldpc_cpu0}
 %GPU Based Algorithms, implementation with CUDA and OpenCL
 \cite{art_ldpc_OpenCl, art_ldpc_OpenCl_1}
 
@@ -148,7 +166,9 @@ The belief propogation algorithm is typically used for decoding LDPC codes \cite
 \cite{art_memory_coalesced, art_massively, art_optimize_0}
 % Mobile device Algorithms
 
-% ARM Algorithms
+% ARM Algorithms and NEON
+
+\cite{art_ldpc_cpu0}
 
 
 
