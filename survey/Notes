@@ -39,14 +39,118 @@ They proposed a GPU-based decoder that enables validating the LDPC codes at very
 
 ----------------------------------------------------------------------------------------------
 
+"High Throughput Low Latency LDPC Decoding on GPU for SDR Systems" \cite{art_optimize_0}
+
+work : 
+This paper has tried to access high throughput low latency decoding through optimization techniques such as : algorithm optimization, full coalesced memory access, asynchronous data transfer and multi-stream concurrentkernel execution. The implemented decoer achieves 316Mbps at 0.207 ms to 1.266 ms.
+
+Good : 
+the Memory access optimization and asynchronous memory transfer part figures are good.
 
 ----------------------------------------------------------------------------------------------
-My Intorduction:
+
+"Portable LDPC Decoding on Multicores Using OpenCL" \cite{art_ldpc_OpenCl}
+
+
+----------------------------------------------------------------------------------------------
+
+"Parallel LDPC decoder implementation on GPU based on unbalanced memory coalescing" \cite{art_memory_coalesced}
+
+----------------------------------------------------------------------------------------------
+"Massively LDPC Decoding on Multicore Architectures" \cite{art_massively}
+
+Good :
+
+%Multi core CPU
+- The integration of multiple cores into a single chip has
+become the new trend to increase processor performance.
+Multicore architectures [10] have evolved from dual- or
+quad-core to many-core systems, supporting multithread-
+ing, a powerful technique to hide memory latency, while at
+the same time provide larger Single Instruction Multiple
+Data (SIMD) units for vector processing. The general-
+purpose multicore processors replicate a single core in a
+homogeneous way, typically with a x86 instruction set, and
+provide shared memory hardware mechanisms. They
+support multithreading and share data at a certain level
+of the memory hierarchy, and can be programmed at a high
+level by using different software technologies [11]. OpenMP
+[12] provides an effective and relatively straightforward
+approach for programming general-purpose multicores and
+was selected under the context of this work.
+
+% GPUs
+- Mainly due to the demands for visualization technology in
+the games industry, the performance of graphics processing
+units (GPUs) has undergone increasing performances over
+the last decade. With many cores driven by a considerable
+memory bandwidth, recent GPUs are targeted for computa-
+tionally intensive, multithreaded, highly parallel computa-
+tion, and researchers in high-performance computing fields
+are applying GPUs to general-purpose applications (GPGPU)
+[13], [14], [15], [16]. However, to apply GPUs to general-
+purpose applications, we need to manage very detailed code
+to control the GPU’s hardware. To hide this complexity from
+the programmer, several programming interface tools [17],
+such as the Compute Unified Device Architecture (CUDA)
+from NVIDIA [18], or the Close to the Metal (CTM) interface
+(replaced by the ATI Stream SDK) from AMD/ATI [19], or
+even the Caravela platform [20], have been developed. CUDA
+provides a new hardware and software architecture for
+managing computations on NVIDIA Tesla series’ GPUs, and
+was selected as the programming interface in the work
+reported in this paper.
+
+Good TABLE :
+
+TABLE 1 "Number of Arithmetic and Memory Access Operations per Iteration for the SPA"
+
+----------------------------------------------------------------------------------------------
+
+"Parallel LDPC decoding using CUDA and OpenMP"  \cite{art_like_me}
+
+Furthermore, iterative LDPC decoding schemes
+based on the sum-product algorithm (SPA) can fully be
+parallelized, leading to high-speed decoding \cite{art_shannon}. For
+these reasons, LDPC coding is widely regarded as a very
+attractive coding technique for high-speed 4G wireless
+communications.
+
+----------------------------------------------------------------------------------------------
+
+"On the design of low-density parity-check codes within 0.0045 dB of the Shannon limit" \cite{art_shannon}
+
+
+
+----------------------------------------------------------------------------------------------
+
+"My Intorduction"
+
+Originally proposed by Robert Gallager in 1962 \cite{art_gallager} and rediscovered by MacKay and Neal in 1996 \cite{art_macKay} Low Density Parity Check (LDPC) codes have been adopted by a wide range of applications including many communication system standards such as WiFi(IEEE 802.11n), 10 Gbit Ethernet (IEEE 802.3an), WiMAX (IEEE 802.16e), and DVB-S2.
+Although LDPC codes have excellent error correcting capability, to date there exist no known mathematical tools to accurately evaluate their performance.
+Thus, a resort is typically made to simulations using computers or dedicated hardware \cite{art_memory_coalesced}.
 
 Wireless Communication is going to need more complex algorithms every day. On the other hand, mobile processors should be able to support these algorithms
 with satisfying quality. One of the major buttlenecks in wireless communication is the decoding process whoch consumes considerable power on a mobile device[citation needed]. "LDPC decoding which is used in DVB-S2 mostly" (not sure how to say it), can be done in parallel and there has been studies on how to achieve high hroughput through efficient approches to implement ldpc decoding in parallel. On the other hand a considerable portion of these works have tried to use gpu devices which has shown results comparable to implementation on FPGAs. However, many highr throughput performances were obtained for costly GPU devices syck as "...". This makes those good for simulation but not applicable to mobile devices with low profile GPUs. This paper tries to achieve a high throughput implementation of an LDPC decoder on a mobile GPU.
 
 The belief propogation algorithm is typically used for decoding LDPC codes \cite{art_belief_0,art_belief_1} but there are also many variations and approximations that have been studied.
+
+% Decoding Algorithms
+
+% Reducing Complexity of Decoding Algorithm
+
+%CPU Based Algorithms
+
+%GPU Based Algorithms, implementation with CUDA and OpenCL
+\cite{art_ldpc_OpenCl, art_ldpc_OpenCl_1}
+
+% Memory Access management in GPU Algorithms
+\cite{art_memory_coalesced, art_massively, art_optimize_0}
+% Mobile device Algorithms
+
+% ARM Algorithms
+
+
 
 Abstract:
 
