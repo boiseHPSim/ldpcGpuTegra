@@ -42,7 +42,7 @@ They proposed a GPU-based decoder that enables validating the LDPC codes at very
 "High Throughput Low Latency LDPC Decoding on GPU for SDR Systems" \cite{art_optimize_0}
 
 work : 
-This paper has tried to access high throughput low latency decoding through optimization techniques such as : algorithm optimization, full coalesced memory access, asynchronous data transfer and multi-stream concurrentkernel execution. The implemented decoer achieves 316Mbps at 0.207 ms to 1.266 ms.
+This paper has tried to access high throughput low latency decoding through optimization techniques such as : algorithm optimization, full coalesced memory access, asynchronous data transfer and multi-stream concurrent kernel execution. The implemented decoer achieves 316Mbps at 0.207 ms to 1.266 ms.
 
 Good : 
 the Memory access optimization and asynchronous memory transfer part figures are good.
@@ -194,7 +194,64 @@ The belief propogation algorithm is typically used for decoding LDPC codes \cite
 \cite{art_ldpc_cpu0, art_neon}
 
 
+----------------------------------------------------------------------------------------------
 
 Abstract:
 
 Low Density Parity Check(LDPC) code is an efficient way of communication and is beeing largely used in mobile communication. With the wide usage and having computational intensivity of LDPC decoders, there has been a lot of effort to reduce decoder's complexity through algorithm optimization and parallel implementation. Recent improvements in mobile processors's architectures has made it exclusively reachable to have a real-time decoder based on a software solution. Knowing this capability, low profile GPU based decoders has been introduced that are capable of reaching high throughput by low latency. On the other hand recently there has been some work that has used ARM SIMD and SIMT programming models instead of GPU that promises satisfying quality. What this works miss is that a mobile processor that is used in a smart phone should support a lot of task and we can not allocate all resources to decoding prcesses. In this paper we propose a heterogeneous LDPC decoder that uses both ARM and GPU Processors of a mobile device to reach real-time effieciency. The different stages of decoder processes has been allocated to ARM and GPU based on an optimization solution. 
+
+----------------------------------------------------------------------------------------------
+
+
+LDPC Codes and their decoding processes:
+
+Many works as in \cite{art_massively, art_ldpc_cpu0,art_ldpc_OpenCl_1,art_gpu_0} focused on mapping LDPC decoders on multicore architectures. Most of these works are based on the standard Two-Phase Message Passing (TPMP) schedule described in \cite{art_massively}. This algorithm works in two phases. In the first phase, all the variable nodes send messages to their neighboring parity check nodes, and in the second phase the parity check nodes send messages to their neighboring variable nodes. Due to transcendental operations and relying of Sum-Product algorithm to the estimation of noise standard deviation, in practice Min-Sum (MS) variants are prefered by designers \cite{art_neon}. More efficient layered schedules, such horizontal layered-based decoding algorithm, allow updated imformation to be utilized more quickly in the algorithm thus speeding up the decoding\cite{art_layered0, art_layered1}. In fact, the parity check matrix can be viewed as a layered graph decoded sequentially. Thw work in \cite{art_gpu_0} has applied a form of layered belief propogation to irregular LDPC codes to reach 2x faster convergence in a given error rate.By using this methos they have reduced memory bits usage by 45-50%. The major limitation of layered algorithm is its irregular memory access although it is composed of a single loop kernel composed to two sequential kernels in standard algorithms. To solve the irregular memory access a data interleaving/deinterleaving process is bein used before and after the decoding process \cite{art_gpu_0, art_neon}.
+
+In this paper the interleaving/deinterleaving process is done ny using ARM Vector processing units and frame decoding is being done in GPU of a mobile device.
+
+
+
+Good : layered Decoding allows updated imformation to be utilized more quickly in the algorithm thus speeding up the decoding\cite{art_layered0}.
+
+work:
+They have applied a form a layered belief propogation to irregular LDPC codes to reach 2x faster convergence in a given error rate.By using this methos they have reduced memory bits usage by 45-50%.
+
+
+----------------------------------------------------------------------------------------------
+
+
+Parallel processing of frames :
+
+
+The porposed LDPC decoder is implemented on Jetson K1 SoCs which contains 4 Cortex-A15 processors. Each core includes a NEON SIMD unit. To achieve high throughput performance on such low-power embedded processors, the following programming model is exploited in the proposed LDPC decoder.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

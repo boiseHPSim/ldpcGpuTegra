@@ -127,11 +127,20 @@ from NVIDIA \cite{website_cuda} and Open Computing Language (OpenCL) platforms t
 
 %ARMs and NEON
 Due to large computing capacity of multicore devices, software LDPC decoders have met the required throughputs of communication standards, although power consumption of x86 and GPU devices is incompatible with most of the embedded systems \cite{art_neon}. To solve this issue, ARM-based SDR systems have been prposed in recent years \cite{art_neon, art_ldpc_cpu0, art_ldpc_OpenCl_1} with goal of a SDR LDPC decoder that provides high through, low latency on a low-power embedded system. The authors in \cite{art_neon} have used ARM Processors's NEON SIMD and SIMT programming models to implement to implement a horizontal layered-based decoder that is based on parallel decoding of a low set of frames. This approach allows reaching high throughput while maintaining low-latency. Due to restrictions in an embedded system, using all resources of the system is a crucial task. Recent works in SDR LDPC embedded systems are missing the fact that todays mobile devices have powerful CUDA enabled GPUs. This paper has prposed a new algorithm that exploits ARM NEON SIMD Units and GPU together to reach a high throughput, low latency LDCP decoder. The main specification of the algorithm is that is devides processing task between system's resources. 
+
 \section{LDPC codes and their Decoding Processes}
 
-\section{Parallel Frame Processing}
+Many works as in \cite{art_massively, art_ldpc_cpu0,art_ldpc_OpenCl_1,art_gpu_0} focused on mapping LDPC decoders on multicore architectures. Most of these works are based on the standard Two-Phase Message Passing (TPMP) schedule described in \cite{art_massively}. This algorithm works in two phases. In the first phase, all the variable nodes send messages to their neighboring parity check nodes, and in the second phase the parity check nodes send messages to their neighboring variable nodes. Due to transcendental operations and relying of Sum-Product algorithm to the estimation of noise standard deviation, in practice Min-Sum (MS) variants are prefered by designers \cite{art_neon}. More efficient layered schedules, such horizontal layered-based decoding algorithm, allow updated imformation to be utilized more quickly in the algorithm thus speeding up the decoding\cite{art_layered0, art_layered1}. In fact, the parity check matrix can be viewed as a layered graph decoded sequentially. Thw work in \cite{art_gpu_0} has applied a form of layered belief propogation to irregular LDPC codes to reach 2x faster convergence in a given error rate.By using this methos they have reduced memory bits usage by 45-50\%. The major limitation of layered algorithm is its irregular memory access although it is composed of a single loop kernel composed to two sequential kernels in standard algorithms. To solve the irregular memory access a data interleaving/deinterleaving process is bein used before and after the decoding process \cite{art_gpu_0, art_neon}.
 
-\section{Results}
+In this paper the interleaving/deinterleaving process is done ny using ARM Vector processing units and frame decoding is being done in GPU of a mobile device.
+
+\section{Parallel Frame Processing}
+The porposed LDPC decoder is implemented on Jetson TK1 SoCs which contains 4 Cortex-A15 processors. Each core includes a NEON SIMD unit. To achieve high throughput performance on such low-power embedded processors, the following programming model is exploited in the proposed LDPC decoder.
+
+
+\section{Experimental Results}
+
+The experiments were carried out by decoding LDPC codes using NVIDIA Tegra K1 Socs. The programs compiled with GCC-4.8 and CUDA 6.5. The TK1 is composed of 4 cortex-A15 ARM processors and one NVIDIA Kepler "GK20a" GPU with 192 SM3.2 CUDA cores. The host platform uses a GNU/Linux kernel 3.10.40-gdacac96. 
 
 \section{Conclusion}
 The conclusion goes here.
