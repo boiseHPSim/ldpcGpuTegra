@@ -225,7 +225,8 @@ Parallel processing of frames :
 
 The porposed LDPC decoder is implemented on Jetson K1 SoCs which contains 4 Cortex-A15 processors. Each core includes a NEON SIMD unit. To achieve high throughput performance on such low-power embedded processors, the following programming model is exploited in the proposed LDPC decoder.
 
-
+Typically, there are two ways to deliver messages in LDPC decoding. One is to use probabilities, and the other is to use log-likelihood ratios (LLRs). In general, using LLRs is favored since that allows us to replace expensive multiplication operations with inexpensive addition operations \cite{art_cuda_openmp}. So the host is in charge of Initialization of Check Nodes (CNS), Frame interleaving befor decoding and frame deinterleaving after decoding. From decoder point of view, host sends/receive data to/from the GPU device as the decoder. The GPU device is responsible for all CNs to Variable Nodes(VNs) computations that is done in one kernel (see \ref{fig_porposed_alg}). At the end of decoding, hard decision decodings are taken and decisions are sent back to the host.
+SIMD programming model in host enables each processor core to interleave F frames in parallel with 8-bitxF the width in bits of SIMD unit. So there is C (number of host cores) set of F frame streams of data into GPU device. Each processor controls its own stream to GPU. On the GPU there are C similar kernel running. As long as the memory that is used in GPU is bigger than CxFx8-bits, there would be no problem in memory allocation. 
 
 
 
