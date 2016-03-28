@@ -67,7 +67,7 @@
 
 
 \begin{document}
-\title{Resource Aware LDPC Decoder Algorithm on ARM and GPU of Mobile Devices}
+\title{Heterogeneous LDPC Decoder Algorithm on ARM and GPU of Mobile Devices}
 
 % author names and affiliations
 % use a multiple column layout for up to three different
@@ -81,11 +81,11 @@ Email: roohollahamiri@boisestate.edu}
 \IEEEauthorblockA{Department of Electrical and\\Computer Engineering\\
 Boise State University\\
 Email: hanimehrpouyan@boisestate.edu}
-\and
-\IEEEauthorblockN{Inanc Senocak}
-\IEEEauthorblockA{Department of Mechanical Engineering\\
-Boise State University\\
-Email: senocak@boisestate.edu}
+%\and
+%\IEEEauthorblockN{Inanc Senocak}
+%\IEEEauthorblockA{Department of Mechanical Engineering\\
+%Boise State University\\
+%Email: senocak@boisestate.edu}
 }
 
 % use for special paper notices
@@ -98,7 +98,31 @@ Email: senocak@boisestate.edu}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 \begin{abstract}
-Low Density Parity Check(LDPC) code is an efficient way of communication and is beeing largely used in mobile communication. With the wide usage and having computational intensivity of LDPC decoders, there has been a lot of effort to reduce decoder's complexity through algorithm optimization and parallel implementation. Recent improvements in mobile processors's architectures has made it exclusively reachable to have a real-time decoder based on a software solution. Knowing this capability, low profile GPU based decoders has been introduced that are capable of reaching high throughput by low latency. On the other hand recently there has been some work that has used ARM NEON SIMD unit with promising throughput and latency. What this works miss is that a mobile processor that is used in a smart phone should support a lot of task and we can not allocate all resources to decoding prcesses. In this paper we propose a heterogeneous LDPC decoder that uses both ARM and GPU Processors of a mobile device to reach real-time effieciency. The different stages of decoder processes has been allocated to ARM and GPU based on an optimization solution. 
+
+
+Low density parity check (LDPC) codes have been extensively applied in mobile communication systems due to their excellent error correcting capabilities. However, their wide adoption has been hindered by the high complexity of the LDPC decoder. Although to date, dedicated hardware has been used to implement low latency LDPC decoders, recent advancements in the architecture of mobile processors has made it possible to develop software solutions. Here, unlike prior solutions that are based on either graphic processing units (GPUs) or advanced RISC machine (ARM) architectures, we propose a heterogeneous LDPC decoder that uses both ARM and GPU processors of a mobile device to achieve efficient real-time decoding. The proposed solution is implemented on an NVIDIA development board, where our results indicate that we can reduce the load on either the GPU or the ARM processor through the proposed heterogeneous structure, which in turn allows both processors to support other applications.
+
+%Low density parity check (LDPC) codes have been extensively applied in mobile communication systems due to their excellent error correcting capabilities. However, their wide adoption has been hindered by the high complexity of the LDPC decoder. Although to date, dedicated hardware has been used to implement low latency LDPC decoders, recent advancements in the architecture of mobile processors has made it possible to develop software solutions. 
+%Hence, there has been significant effort to develop low latency LDPC decoders via algorithm optimization and parallel implementation. 
+%Here, unlike prior solutions that are based on either graphic processing units (GPUs) or advanced RISC machine (ARM) architectures, we propose a heterogeneous LDPC decoder that uses both ARM and GPU processors of a mobile device to achieve efficient real-time decoding. The proposed solution has been implemented on an NVIDIA mobile development board, where our results indicate that we can reduce the load on either the GPU or the ARM processor through the proposed heterogeneous structure, which in turn allows both processors to support other applications. 
+
+
+%Low density parity check (LDPC) codes have been extensively applied in mobile communication systems due to their excellent error correcting capabilities. However, the wide adoption of LDPC codes has been hindered by the high computational complexity of the LDPC decoder at the receiver. Although to date, dedicated hardware has been used to develop low latency LDPC decoders, recent advancements in the architecture of mobile processors has made it possible to develop software based solutions. Hence, there has been significant effort to develop low latency LDPC decoders via algorithm optimization and parallel implementation. Here, unlike prior solutions that are based on either graphic processing units (GPUs) or advanced RISC machine (ARM) architectures, we propose a heterogeneous LDPC decoder that uses both ARM and GPU processors of a mobile device to achieve efficient real-time decoding. The proposed solution has been implemented on an NVIDIA mobile development board, where our results indicate that we can reduce the load on either the GPU or the ARM processor through the proposed heterogeneous structure, which in turn allows the mobile device to support other applications. 
+
+%Low density  parity check (LDPC) codes have been extensively applied to enhance the performance of mobile communication systems due to their enhanced error correction capabilities. However, the wide adoption of strong LDPC codes has been hindered by the high computational complexity of the LDPC decoder at the receiver. Although to date, dedicated hardware has been used to develop low latency LDPC decoders, recent advancements in the architecture of mobile processors has made it possible to develop software based LDPC decoders. Hence, there has been significant effort to design and develop low latency LDPC decoders by utilizing algorithm optimization and parallel implementation. 
+
+
+%Recent improvements in mobile processors's architectures has made it exclusively reachable to have a real-time decoder based on a software solution. 
+
+%Knowing this capability, low profile GPU based decoders have been introduced that are capable of reaching high throughput by low latency. On the other hand recently there has been some work that has used ARM NEON SIMD unit with promising throughput and latency. What this works miss is that a mobile processor that is used in a smart phone should support a lot of task and we can not allocate all resources to decoding prcesses. In this paper we propose a heterogeneous LDPC decoder that uses both ARM and GPU Processors of a mobile device to reach real-time effieciency. The different stages of decoder processes has been allocated to ARM and GPU based on an optimization solution. 
+
+
+%With the wide usage and having computational intensivity of LDPC decoders, there has been a lot of effort to reduce decoder's complexity through algorithm optimization and parallel implementation. 
+
+
+%for error correction in communication systems.  to  is an efficient way of communication and is being largely used in mobile communication. With the wide usage and having computational intensivity of LDPC decoders, there has been a lot of effort to reduce decoder's complexity through algorithm optimization and parallel implementation. Recent improvements in mobile processors's architectures has made it exclusively reachable to have a real-time decoder based on a software solution. Knowing this capability, low profile GPU based decoders has been introduced that are capable of reaching high throughput by low latency. On the other hand recently there has been some work that has used ARM NEON SIMD unit with promising throughput and latency. What this works miss is that a mobile processor that is used in a smart phone should support a lot of task and we can not allocate all resources to decoding prcesses. In this paper we propose a heterogeneous LDPC decoder that uses both ARM and GPU Processors of a mobile device to reach real-time effieciency. The different stages of decoder processes has been allocated to ARM and GPU based on an optimization solution. 
+
+
 \end{abstract}
 
 % no keywords
