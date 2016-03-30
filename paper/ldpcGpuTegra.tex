@@ -108,10 +108,6 @@ Email: hanimehrpouyan@boisestate.edu}
 
 Low density parity check (LDPC) codes have been extensively applied in mobile communication systems due to their excellent error correcting capabilities. However, their wide adoption has been hindered by the high complexity of the LDPC decoder. Although to date, dedicated hardware has been used to implement low latency LDPC decoders, recent advancements in the architecture of mobile processors has made it possible to develop software solutions. Here, unlike prior solutions that are based on either graphic processing units (GPUs) or advanced RISC machine (ARM) architectures, we propose a heterogeneous LDPC decoder that uses both the ARM and GPU processors of a mobile device to achieve efficient real-time decoding. The proposed solution is implemented on an NVIDIA development kit, where our results indicate that we can reduce the load on either the GPU or the ARM processor through the proposed heterogeneous structure, which in turn allows these resources to support other applications, simultaneously.
 
-%Low density parity check (LDPC) codes have been extensively applied in mobile communication systems due to their excellent error correcting capabilities. However, their wide adoption has been hindered by the high complexity of the LDPC decoder. Although to date, dedicated hardware has been used to implement low latency LDPC decoders, recent advancements in the architecture of mobile processors has made it possible to develop software solutions. 
-%Hence, there has been significant effort to develop low latency LDPC decoders via algorithm optimization and parallel implementation. 
-%Here, unlike prior solutions that are based on either graphic processing units (GPUs) or advanced RISC machine (ARM) architectures, we propose a heterogeneous LDPC decoder that uses both ARM and GPU processors of a mobile device to achieve efficient real-time decoding. The proposed solution has been implemented on an NVIDIA mobile development board, where our results indicate that we can reduce the load on either the GPU or the ARM processor through the proposed heterogeneous structure, which in turn allows both processors to support other applications. 
-
 
 %Low density parity check (LDPC) codes have been extensively applied in mobile communication systems due to their excellent error correcting capabilities. However, the wide adoption of LDPC codes has been hindered by the high computational complexity of the LDPC decoder at the receiver. Although to date, dedicated hardware has been used to develop low latency LDPC decoders, recent advancements in the architecture of mobile processors has made it possible to develop software based solutions. Hence, there has been significant effort to develop low latency LDPC decoders via algorithm optimization and parallel implementation. Here, unlike prior solutions that are based on either graphic processing units (GPUs) or advanced RISC machine (ARM) architectures, we propose a heterogeneous LDPC decoder that uses both ARM and GPU processors of a mobile device to achieve efficient real-time decoding. The proposed solution has been implemented on an NVIDIA mobile development board, where our results indicate that we can reduce the load on either the GPU or the ARM processor through the proposed heterogeneous structure, which in turn allows the mobile device to support other applications. 
 
@@ -189,13 +185,13 @@ Many works as in \cite{art_massively, art_ldpc_cpu0,art_ldpc_OpenCl_1,art_gpu_0}
 \begin{algorithm}\label{algorithm1}
 \renewcommand\thealgorithm{}
 \caption{Flooding Min-Sum algorithm}
-\begin{algorithmic}
+\begin{algorithmic}[1]
 \STATE \textbf{Kernel 1:} Initialization
 \FORALL{$m \in C, n \in V$}
-\IF{$H_{mn}==1$}
+%\IF{$H_{mn}==1$}
 \STATE
-$Lq_{nm}=LP_n=\dfrac{2y_n}{\sigma^2}.$
-\ENDIF
+$Lq_{nm}=0$%LP_n=\dfrac{2y_n}{\sigma^2}.$
+%\ENDIF
 \ENDFOR
 \FORALL{$t=1 \rightarrow (iter\_max)$}
 \STATE \textbf{Kernel 2:} LLR of message $CN_m$ to $BN_n$
@@ -223,7 +219,28 @@ More efficient layered schedules, such horizontal layered-based decoding algorit
 \renewcommand\thealgorithm{}
 \caption{Horizontal Layered Min-Sum algorithm}
 \begin{algorithmic}
+\STATE \textbf{Kernel 1:} Initialization
+\FORALL{$m \in C, n \in V$}
 \STATE
+$Lr_{mn}=0$
+\ENDFOR
+\FORALL{$t=1 \rightarrow (iter\_max)$}
+\STATE \textbf{Kernel 2:} Process each CN one after another
+\FORALL{$m \in C$}
+\FORALL{$n \in V$}
+\STATE $\alpha_{nm} \triangleq sign(Lq_{nm}),$
+\STATE $\beta_{nm} \triangleq \abs{Lq_{nm}},$
+\STATE $Lr'_{mn} = \prod\limits_{n' \in N(m)\backslash n} \alpha_{n'm} \min\limits_{n' \in N(m)\backslash n} \beta_{n'm}.$ \STATE\COMMENT{$Lr'_{mn}$ is the new calculated massage to $BN_n$}
+\ENDFOR
+\ENDFOR
+\FORALL{$n \in V$}
+\STATE $LQ'_n=LQ_n-Lr_{mn}+Lr'_{mn}$
+\ENDFOR
+\ENDFOR % END Iteration
+\STATE \textbf{Kernel 4:} Hard decision from soft-values
+\FORALL{$n \in V$}
+\STATE $\forall n, \hat{c}=[LQ_n]>0.$
+\ENDFOR
 \end{algorithmic}
 \addtocounter{algorithm}{-1}
 \end{algorithm}
