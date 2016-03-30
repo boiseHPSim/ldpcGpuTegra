@@ -32,13 +32,19 @@
 
 % *** MATH PACKAGES ***
 %
+\usepackage{mathtools}  
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tabulary}
+\usepackage{booktabs}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
 
 \interdisplaylinepenalty=2500
 
 % *** SPECIALIZED LIST PACKAGES ***
 %
-\usepackage{algorithmic}
+\usepackage{algorithmic,algorithm}
 
 
 % *** ALIGNMENT PACKAGES ***
@@ -157,12 +163,70 @@ The contributions of this paper are twofold. First, it proposes an LDPC decoder 
 LDPC codes are a class of linear block codes with a very sparse parity check matrix called H-matrix. Their main advantage is that they provide a peformance which is very close to the channel capacity for a lot of different channels and linear time complex algorithms for decoding. Furthermore, they are suited for implementations that make heavy use of parallelism.
 
 %representation
-Basically there are two ways to represent LDPC codes. Like all linear block codes they can be described by their H-matrix, while they can be represented by a Tanner graph which is a bipartite graph. An LDPC graph consists of a set of variable nodes (VNs) , a set of check nodes (CNs), and a set of edges E. Each edge connects a variable node to a check node. For example, when the (i,j) element of an H-matrix is '1', the ith check node is connected to the jth variable node of the equivalent Tanner graph. Figures illustrate an H-matrix and the equivalent Tanner graph for (8,4) LDPC code.
+Basically there are two ways to represent LDPC codes. Like all linear block codes they can be described by their H-matrix, while they can be represented by a Tanner graph which is a bipartite graph. An LDPC graph consists of a set of variable nodes (VNs) , a set of check nodes (CNs), and a set of edges E. Each edge connects a variable node to a check node. For example, when the (i,j) element of an H-matrix is '1', the ith check node is connected to the jth variable node of the equivalent Tanner graph. Figure \ref{tanner} illustrate the equivalent Tanner graph for (10,5) LDPC code with H-matrix in \ref{H-matrix}.
+
+\begin{equation}\label{H-matrix}
+H=
+  \begin{bmatrix}
+    1 & 1 & 1 & 1 & 0 &0 &0 &0 &0 &0 \\
+    1 & 0 & 0 & 0 & 1 &1 &1 &0 &0 &0 \\
+    0 & 1 & 0 & 0 & 1 &0 &0 &1 &1 &0 \\
+    0 & 0 & 1 & 0 & 0 &1 &0 &1 &0 &1 \\
+    0 & 0 & 0 & 1 & 0 &0 &1 &0 &1 &1 \\
+  \end{bmatrix}
+\end{equation}
+
+\begin{figure}[h]\label{tanner}
+\begin{centering}
+\includegraphics[scale=0.35]{tanner.pdf}
+\caption[width=.3\textwidth]{An example of Tanner graph}
+\end{centering}
+\end{figure}
 
 %Decoding
 Many works as in \cite{art_massively, art_ldpc_cpu0,art_ldpc_OpenCl_1,art_gpu_0} focused on mapping LDPC decoders on multicore architectures. Most of these works are based on the standard two-phase message passing (TPMP) schedule described in \cite{art_massively}. This algorithm works in two phases. In the first phase, all the variable nodes send messages to their neighboring parity check nodes, and in the second phase the parity check nodes send messages to their neighboring variable nodes. Due to transcendental operations and relying of message passing algorithm to the estimation of noise standard deviation, in practice Min-Sum (MS) variants are prefered by designers \cite{art_neon}. This algorithm is provided in Algorithm 1.
 
+\begin{algorithm}\label{algorithm1}
+\renewcommand\thealgorithm{}
+\caption{Flooding Min-Sum algorithm}
+\begin{algorithmic}
+\STATE \textbf{Kernel 1:} Initialization
+\FORALL{$m \in C, n \in V$}
+\IF{$H_{mn}==1$}
+\STATE
+$Lq_{nm}=LP_n=\dfrac{2y_n}{\sigma^2}.$
+\ENDIF
+\ENDFOR
+\FORALL{$t=1 \rightarrow (iter\_max)$}
+\STATE \textbf{Kernel 2:} LLR of message $CN_m$ to $BN_n$
+\FORALL{$m \in C, n \in V$}
+\STATE $\alpha_{nm} \triangleq sign(Lq_{nm}),$
+\STATE $\beta_{nm} \triangleq \abs{Lq_{nm}},$
+\STATE $Lr_{mn} = \prod\limits_{n' \in N(m)\backslash n} \alpha_{n'm} \min\limits_{n' \in N(m)\backslash n} \beta_{n'm}.$
+\ENDFOR
+\STATE \textbf{Kernel 3:} LLR of message $BN_n$ to $CN_m$
+\FORALL{$m \in C, n \in V$}
+\STATE $Lq_{nm} = LP_n + \sum\limits_{m' \in M(n)\backslash m} Lr_{m'n}.$
+\ENDFOR  
+\ENDFOR % End of Iter
+\STATE \textbf{Kernel 4:} Hard decision from soft-values
+\FORALL{$n \in V$}
+\STATE $LQ_{n} = LP_n + \sum\limits_{m' \in M(n)} Lr_{m'n},$
+\STATE $\forall n, \hat{c}=[LQ_n]>0.$
+\ENDFOR
+\end{algorithmic}
+\addtocounter{algorithm}{-1}
+\end{algorithm}
+
 More efficient layered schedules, such horizontal layered-based decoding algorithm, allow updated imformation to be utilized more quickly in the algorithm, thus, speeding up the decoding\cite{art_layered0, art_layered1}. In fact, the H-matrix can be viewed as a layered graph that is decoded sequentially. The work in \cite{art_gpu_0} has applied a form of layered belief propogation to irregular LDPC codes to reach 2x faster convergence in a given error rate.By using this method they have reduced memory bits usage by 45-50\%. The layered decoding (Algorithm 2) can be summarized as follow: all values for the check node computations are computed using variable node massages linked to them. Once, a check node is calculated, the corresponding variable nodes are updated immediately after receiving massages. This process is repeated to the maximum number of iterations.
+\begin{algorithm}\label{algorithm2}
+\renewcommand\thealgorithm{}
+\caption{Horizontal Layered Min-Sum algorithm}
+\begin{algorithmic}
+\STATE
+\end{algorithmic}
+\addtocounter{algorithm}{-1}
+\end{algorithm}
 
 In algorithm 1, TPMP, the kernels 2 and 3 are updated by seperate processing and passes to each other iteratively. It means that variable nodes update, will not start until all check nodes are updated. Consdering that, algorithm 2, horizontal layered decoding, is composed of a single loop kernel with some data dependencies between consecutive loop Iterations and in each Iteration, the horizontal layers are processed sequentially from the top to the bottom layer \cite{art_quasi}.
 
