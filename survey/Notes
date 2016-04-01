@@ -247,6 +247,21 @@ In algorithm 1, TPMP, the kernels 2 and 3 are updated by seperate processing and
 
 The major limitation of layered algorithm is its irregular memory access although it is composed of a single loop kernel composed to two sequential kernels in standard algorithms. To solve this irregular memory access, a data interleaving/deinterleaving process is used before and after the decoding process in \cite{art_gpu_0, art_neon}, which is used in the proposing algorithm too. In \cite{art_gpu_0}, the GPU decoder achieves high throughputs but its latency that goes beyond seconds makes it suitable for simulation purposes only. On the other hand, the ARM decoder proposed in \cite{art_neon} uses all computing resources (4 existing cores) for LDPC decoding and does not take advantage of GPU processing on mobile devices. This paper uses one single core of ARM and the GPU device of a mobile processor to implement a high throughput and low latency LDPC decoder. By using one core of the ARM processor, there will be extra processing power for other applications of a mobile device and less memory of ARM processor will be used for decoding. On the other hand, since the GPU and ARM of a mobile device are sitting on a same die, the latency issues in \cite{art_gpu_0} are improved.
 
+----------------------------------------------------------------------------------------------
+
+###Parallel Frame Processing
+
+Assumptions : Embedded device equipped with ARM processor with NEON SIMD unit, and a CUDA enabled GPU
+Frame Width = n
+Number of Concurrent Streams = W
+
+
+stream based approach for SIMT model on GPU
+
+
+
+
+
 
 
 
