@@ -224,21 +224,40 @@ In algorithm 1, TPMP, the kernels 2 and 3 are updated by seperate processing and
 
 Although layered algorithm is composed of a single loop kernel composed to two sequential kernels in standard algorithms, it has an irregular memory access as a major limitation. To solve this irregular memory access, a data interleaving/deinterleaving process is used before and after the decoding process in \cite{art_gpu_0, art_neon}, which is used in the proposing algorithm too. In \cite{art_gpu_0}, the GPU decoder achieves high throughputs but its latency that goes beyond seconds makes it suitable for simulation purposes only. On the other hand, the ARM decoder proposed in \cite{art_neon} uses all computing resources (4 existing cores) for LDPC decoding and does not take advantage of GPU processing on mobile devices. This paper uses one single core of ARM and the GPU device of a mobile processor to implement a high throughput and low latency LDPC decoder. By using one core of the ARM processor, there will be processing power for other applications of a mobile device and less memory of ARM processor will be used for decoding. On the other hand, since the GPU and ARM of a mobile device are sitting on a same die, the latency issues in \cite{art_gpu_0} are improved.
 
-\section{Parallel Frame Processing} \label{sec3}
-The proposed LDPC decoder is implemented on Jetson TK1 SoCs which contains 4 Cortex-A15 processors. Each core includes a NEON SIMD unit. To achieve high throughput performance on such low-power embedded processors, the following programming model is exploited in the proposed LDPC decoder.
+\section{Algorithm Mapping}\label{sec3}
+
+An efficient implementation of the layered decoding algorithm is a challenging task. The drawbacks of this algorithm as in terms of programming are: (i) the number of computations respect to number of memory access is low; (ii) the data reusing between consecutive computations is low; (iii) it requires a large set of irregular memory access due to H-matrix structure \cite{art_ldpc_cpu1}. Considering these, an software-based decoder should take advantage of different parallelism levels offered by the target architecture to achieve high throughput efficiency. In this section, first the target architecture's features are presented. Then the decoding algorithm is detailed.
+
+\subsection{Target architecture} \label{target_architecture}
+In this study, we focused on embedded devices equipped with ARM and NVIDIA GPU processors. One example is Jetson K1 SoCs which contains a 4-core Cortex-A15 and a Kepler GPU processor.
+
+ARM Cortex-A15 processor is composed of 15 integer/17-25 floating point pipeline stages. To limit the level of memory access latency, multi-level caches were introduced. Cortex-A15 has 32 KB data + 32 KB instruction L1 cache per core and an integrated low-latency L2 cache controller, up to 4 MB per cluster. Each core includes a NEON SIMD unit which can execute up to 16 computations on 8-bit data simultaneously. Tegra K1 features a single SMX (in a single GPC), which amounts to 192 CUDA cores using Kepler technology. Concurrent kernel execution capability of this device is used in the proposed mapping. To achieve high throughput performance on such a low-power embedded processors, the two programming models are exploited in the proposed LDPC decoder. In the next subsections, we detailed the different parallelism levels along with the implementation choices.
+
+\subsection{Parallelism levels in the proposed algorithm}
+To achieve high throughput performance, a software LDPC decoder has to exploit computation parallelism for taking advantage of multi-core architectures. Different parallelism levels are present in a layered decoding algorithm. \textbf{First parallelism level} is located inside the CN computations (Algorithm 2, loops located at line 8 and 15). It is possible to execute such computations in parallel, however this atomic parallelism level is hard to exploit due to the low complexity of computations. \textbf{Second parallelism level} is located at CN level (Algorithm 2, line 7). Two CN computations can be done in parallel if there is data dependency. Thus this level is hard to exploit and inefficient. \textbf{Third parallelism level} is located at frame level (Complete Algorithm 2). A same computation is sequence is executed over consecutive frames. This approach provides an efficient parallel processing algorithm. So we have used single instruction multiple data (SIMD) programming model to decode F frames in parallel. 
+
+\subsection{Data Interleaving/deinterleaving}
+The implementation of the parallel frame processing is subject to massive irregular memory access due to structure of H-matrix. As a matter of fact, to process the same $VN_i$ element of the F frames at the same time, non-contiguous memory access would affect performance. To solve this issue, a data interleaving process has to be performed before and after decoding stage. So channel frames coming from F frames are reordered to achieve an aligned memory data structure. This reordering is done on SIMD units of ARM processor. This reordering is shown in Figure \ref{fig_intreleave}.
 
 \begin{figure}[h]
 \begin{centering}
-\scalebox{0.4}{\includegraphics{structure.eps}}
-\caption[width=.3\textwidth]{Proposed Setup for Heterogeneous LDPC decoding}
-\label{fig_porposed_alg}
+\scalebox{0.4}{\includegraphics{interleaving.jpg}}
+\caption[width=.3\textwidth]{Data interleaving/deinterleaving process}
+\label{fig_intreleave}
 \end{centering}
 \end{figure}
 
-Typically, there are two ways to deliver messages in LDPC decoding. One is to use probabilities, and the other is to use log-likelihood ratios (LLRs). In general, using LLRs is favored since that allows us to replace expensive multiplication operations with inexpensive addition operations \cite{art_cuda_openmp}. So the host is in charge of Initialization of Check Nodes (CNS), Frame interleaving befor decoding and frame deinterleaving after decoding. From decoder point of view, host sends/receive data to/from the GPU device as the decoder. The GPU device is responsible for all CNs to Variable Nodes(VNs) computations that is done in one kernel (see figure \ref{fig_porposed_alg}). At the end of decoding, hard decision decodings are taken and decisions are sent back to the host.
-SIMD programming model in host enables each processor core to interleave F frames in parallel with 8-bitxF the width in bits of SIMD unit. So there is C (number of host cores) set of F frame streams of data into GPU device. Each processor controls its own stream to GPU. On the GPU there are C similar kernel running. As long as the memory that is used in GPU is bigger than CxFx8-bits, there would be no problem in memory allocation. 
+\subsection{Stream based parallelism}
 
+SIMT programming model is used to decode W sets of F frames concurrently, with W the number of concurrent streams on the GPU device. This multi-core programming is specified by CUDA API. Each gpu stream is controlled by a \textit{pthread} called \textit{worker}. Each \textit{worker} is responsible for its own sets of frames. By using stream based processing, the system can decode $W x F$ frames at the same time. The whole LDPC decoder system model is shown in Figure \ref{fig_total}.
 
+\begin{figure}[h]
+\begin{centering}
+\scalebox{0.6}{\includegraphics{total.jpg}}
+\caption[width=.3\textwidth]{LDCP Decoder Data Flow}
+\label{fig_total}
+\end{centering}
+\end{figure}
 
 \section{Experimental Results} \label{sec4}
 
