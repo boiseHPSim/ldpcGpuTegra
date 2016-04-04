@@ -241,7 +241,7 @@ The implementation of the parallel frame processing is subject to massive irregu
 
 \begin{figure}[h]
 \begin{centering}
-\scalebox{0.4}{\includegraphics{interleaving.jpg}}
+\scalebox{0.25}{\includegraphics{inter1.jpg}}
 \caption[width=.3\textwidth]{Data interleaving/deinterleaving process}
 \label{fig_intreleave}
 \end{centering}
@@ -249,11 +249,11 @@ The implementation of the parallel frame processing is subject to massive irregu
 
 \subsection{Stream based parallelism}
 
-SIMT programming model is used to decode W sets of F frames concurrently, with W the number of concurrent streams on the GPU device. This multi-core programming is specified by CUDA API. Each gpu stream is controlled by a \textit{pthread} called \textit{worker}. Each \textit{worker} is responsible for its own sets of frames. By using stream based processing, the system can decode $W x F$ frames at the same time. The whole LDPC decoder system model is shown in Figure \ref{fig_total}.
+SIMT programming model is used to decode W sets of F frames concurrently, with W the number of concurrent streams on the GPU device. This multi-core programming is specified by CUDA API. Each gpu stream is controlled by a \textit{pthread} called \textit{worker}. Each \textit{worker} is responsible for its own sets of frames. By using stream based processing, the system can decode W x F frames at the same time. The whole LDPC decoder system model is shown in Figure \ref{fig_total}.
 
 \begin{figure}[h]
 \begin{centering}
-\scalebox{0.6}{\includegraphics{total.jpg}}
+\scalebox{0.5}{\includegraphics{total.pdf}}
 \caption[width=.3\textwidth]{LDCP Decoder Data Flow}
 \label{fig_total}
 \end{centering}
