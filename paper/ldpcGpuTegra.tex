@@ -226,18 +226,18 @@ Although layered algorithm is composed of a single loop kernel composed to two s
 
 \section{Algorithm Mapping}\label{sec3}
 
-An efficient implementation of the layered decoding algorithm is a challenging task. The drawbacks of this algorithm as in terms of programming are: (i) the number of computations respect to number of memory access is low; (ii) the data reusing between consecutive computations is low; (iii) it requires a large set of irregular memory access due to H-matrix structure \cite{art_ldpc_cpu1}. Considering these, an software-based decoder should take advantage of different parallelism levels offered by the target architecture to achieve high throughput efficiency. In this section, first the target architecture's features are presented. Then the decoding algorithm is detailed.
+An efficient implementation of the layered decoding algorithm is a challenging task. The drawbacks of this algorithm as in terms of programming are: (i) the number of computations respect to number of memory access is low; (ii) the data reusing between consecutive computations is low; (iii) it requires a large set of irregular memory access due to H-matrix structure \cite{art_ldpc_cpu1}. Considering these, a software-based decoder should take advantage of different parallelism levels offered by the target architecture to achieve high throughput efficiency. In this section, first the target architecture's features are presented. Then the decoding algorithm is detailed.
 
 \subsection{Target architecture} \label{target_architecture}
-In this study, we focused on embedded devices equipped with ARM and NVIDIA GPU processors. One example is Jetson K1 SoCs which contains a 4-core Cortex-A15 and a Kepler GPU processor.
+In this study, we focused on embedded devices equipped with ARM and GPU processors. One example is Jetson K1 SoCs which contains a 4-core Cortex-A15 and a GPU processor.
 
-ARM Cortex-A15 processor is composed of 15 integer/17-25 floating point pipeline stages. To limit the level of memory access latency, multi-level caches were introduced. Cortex-A15 has 32 KB data + 32 KB instruction L1 cache per core and an integrated low-latency L2 cache controller, up to 4 MB per cluster. Each core includes a NEON SIMD unit which can execute up to 16 computations on 8-bit data simultaneously. Tegra K1 features a single SMX (in a single GPC), which amounts to 192 CUDA cores using Kepler technology. Concurrent kernel execution capability of this device is used in the proposed mapping. To achieve high throughput performance on such a low-power embedded processors, the two programming models are exploited in the proposed LDPC decoder. In the next subsections, we detailed the different parallelism levels along with the implementation choices.
+ARM Cortex-A15 processor is composed of 15 integer/17-25 floating point pipeline stages. To limit the level of memory access latency, it has multi-level caches as 32 KB data + 32 KB instruction L1 cache per core and an integrated low-latency L2 cache controller, up to 4 MB per cluster. Each core includes a NEON SIMD unit which can execute up to 16 computations on 8-bit data simultaneously. As in terms of GU features, concurrent kernel execution capability of this device is most used in the proposed mapping. To achieve high throughput performance on such a low-power embedded processors, SIMD and SIMT programming models are exploited in the proposed LDPC decoder. In the next subsections, we detailed the different parallelism levels along with the implementation choices.
 
 \subsection{Parallelism levels in the proposed algorithm}
-To achieve high throughput performance, a software LDPC decoder has to exploit computation parallelism for taking advantage of multi-core architectures. Different parallelism levels are present in a layered decoding algorithm. \textbf{First parallelism level} is located inside the CN computations (Algorithm 2, loops located at line 8 and 15). It is possible to execute such computations in parallel, however this atomic parallelism level is hard to exploit due to the low complexity of computations. \textbf{Second parallelism level} is located at CN level (Algorithm 2, line 7). Two CN computations can be done in parallel if there is data dependency. Thus this level is hard to exploit and inefficient. \textbf{Third parallelism level} is located at frame level (Complete Algorithm 2). A same computation is sequence is executed over consecutive frames. This approach provides an efficient parallel processing algorithm. So we have used single instruction multiple data (SIMD) programming model to decode F frames in parallel. 
+To achieve high throughput performance, a software LDPC decoder has to exploit computation parallelism for taking advantage of multi-core architectures. Different parallelism levels are present in a layered decoding algorithm. \textbf{First parallelism level} is located inside the CN computations (Algorithm 2, loops located at line 8 and 15). It is possible to execute such computations in parallel, however this atomic parallelism level is hard to exploit due to the low complexity of computations. \textbf{Second parallelism level} is located at CN level (Algorithm 2, line 7). Two CN computations can be done in parallel if there is no data dependency. Thus this level is hard to exploit and inefficient. \textbf{Third parallelism level} is located at frame level (Complete Algorithm 2). A same computation sequence is executed over consecutive frames. This approach provides an efficient parallel processing algorithm. So we have used single instruction multiple data (SIMD) programming model to decode F frames in parallel. 
 
 \subsection{Data Interleaving/deinterleaving}
-The implementation of the parallel frame processing is subject to massive irregular memory access due to structure of H-matrix. As a matter of fact, to process the same $VN_i$ element of the F frames at the same time, non-contiguous memory access would affect performance. To solve this issue, a data interleaving process has to be performed before and after decoding stage. So channel frames coming from F frames are reordered to achieve an aligned memory data structure. This reordering is done on SIMD units of ARM processor. This reordering is shown in Figure \ref{fig_intreleave}.
+The implementation of the parallel frame processing is subject to massive irregular memory access due to the structure of H-matrix. As a matter of fact, to process the same $VN_i$ element of the F frames at the same time, non-contiguous memory access would affect performance. To solve this issue, a data interleaving process has to be performed before and after decoding stage. So channel information coming from F frames are reordered to achieve an aligned memory data structure. This reordering is shown in Figure \ref{fig_intreleave}.
 
 \begin{figure}[h]
 \begin{centering}
@@ -249,7 +249,7 @@ The implementation of the parallel frame processing is subject to massive irregu
 
 \subsection{Stream based parallelism}
 
-SIMT programming model is used to decode W sets of F frames concurrently, with W the number of concurrent streams on the GPU device. This multi-core programming is specified by CUDA API. Each gpu stream is controlled by a \textit{pthread} called \textit{worker}. Each \textit{worker} is responsible for its own sets of frames. By using stream based processing, the system can decode W x F frames at the same time. The whole LDPC decoder system model is shown in Figure \ref{fig_total}.
+SIMT programming model is used to decode W sets of F frames concurrently, with W the number of concurrent streams on the GPU device. This multi-core programming is specified by CUDA API. Each gpu stream is controlled by a \textit{pthread} called \textit{worker} on the host machine (which is an ARM in this case). Each \textit{worker} is responsible for its own sets of frames. By using stream based processing, the system can decode W$*$F frames at the same time. The whole LDPC decoder system model is shown in Figure \ref{fig_total}.
 
 \begin{figure}[h]
 \begin{centering}
@@ -261,7 +261,13 @@ SIMT programming model is used to decode W sets of F frames concurrently, with W
 
 \section{Experimental Results} \label{sec4}
 
-The experiments were carried out by decoding LDPC codes using NVIDIA Tegra K1 Socs. The programs compiled with GCC-4.8 and CUDA 6.5. The TK1 is composed of 4 cortex-A15 ARM processors and one NVIDIA Kepler "GK20a" GPU with 192 SM3.2 CUDA cores. The host platform uses a GNU/Linux kernel 3.10.40-gdacac96. 
+The experiments were carried out by decoding LDPC codes using NVIDIA Tegra K1 Socs. The programs compiled with GCC-4.8 and CUDA 6.5. The TK1 is composed of 4 cortex-A15 ARM processors and one NVIDIA Kepler "GK20a" GPU with 192 SM3.2 CUDA cores. The host platform uses a GNU/Linux kernel 3.10.40.
+
+\subsection{Performance evaluation of heterogeneous algorithm} 
+
+
+\subsection{Performance comparison with related works}
+
 
 \section{Conclusion}
 The conclusion goes here.
