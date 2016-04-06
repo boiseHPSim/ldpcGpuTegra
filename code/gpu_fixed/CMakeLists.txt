@@ -17,9 +17,9 @@ set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall -std=c++11 -fopenmp")
 
 # Pass options to NVCC
 set(CUDA_NVCC_FLAGS
-    ${CUDA_NVCC_FLAGS};
+    ${CUDA_NVCC_FLAGS}
     -O2
-    -arch=sm_21
+    -arch=sm_50
     )
 
 set(srcs
@@ -30,6 +30,7 @@ set(srcs
 	terminal/CTerminal.cpp
 	tools/debug_fx.cpp
 	trame/CTrame.cpp
+	matrix/constantes_decoder.cpp
 )
 
 set(hdrs

@@ -211,7 +211,7 @@ int main(int argc, char* argv[])
 
 	CGPUDecoder* decoder;
 	if( strcmp(type, "fMS") == 0 ){
-			decoder = new CGPU_Decoder_MS_SIMD( NB_THREAD_ON_GPU, _N, _K, _M );
+		decoder = new CGPU_Decoder_MS_SIMD( NB_THREAD_ON_GPU, _N, _K, _M );
 	}else if( strcmp(type, "MS") == 0 ){
 		decoder = new CGPU_Decoder_MS_SIMD( NB_THREAD_ON_GPU, _N, _K, _M );
 	}else if( strcmp(type, "OMS") == 0 ){
@@ -234,7 +234,8 @@ int main(int argc, char* argv[])
 
 	Eb_N0 = MinSignalSurBruit;
 	int temps = 0, fdecoding = 0;
-	while (Eb_N0 <= MaxSignalSurBruit){
+	while (Eb_N0 <= MaxSignalSurBruit)
+	{
 
         //
         // ON CREE UN OBJET POUR LA MESURE DU TEMPS DE SIMULATION (REMISE A ZERO POUR CHAQUE Eb/N0)
@@ -258,8 +259,8 @@ int main(int argc, char* argv[])
         noise.generate();
         errCounter.store_enc_bits();
 
-		while( 1 ){
-
+		while( 1 )
+		{
 			//
 			//	ON LANCE LE TRAITEMENT SUR PLUSIEURS THREAD...
 			//
@@ -301,7 +302,8 @@ int main(int argc, char* argv[])
 	           	terminal.temp_report();
 			}
 
-			if( (simu_timer.get_time_sec() >= STOP_TIMER_SECOND) && (STOP_TIMER_SECOND != -1) ){
+			if( (simu_timer.get_time_sec() >= STOP_TIMER_SECOND) && (STOP_TIMER_SECOND != -1) )
+			{
         		printf("(II) THE SIMULATION HAS STOP DUE TO THE (USER) TIME CONTRAINT.\n");
         		printf("(II) PERFORMANCE EVALUATION WAS PERFORMED ON %d RUNS, TOTAL TIME = %dms\n", fdecoding, temps);
 				temps /= fdecoding;
