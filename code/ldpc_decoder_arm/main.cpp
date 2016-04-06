@@ -353,22 +353,26 @@ int main(int argc, char* argv[]) {
     // ALLOCATION DYNAMIQUE DES DONNESS NECESSAIRES A LA SIMULATION DU SYSTEME
     //
     CTrame* simu_data[MAX_THREADS];
-    for(int i=0; i<4; i++){
+    for(int i=0; i<4; i++)
+    {
         simu_data[i] = new CTrame(NOEUD, PARITE, nb_frames);
     }
 
     CDecoder* decoder[MAX_THREADS];
-    for(int i=0; i<4; i++){
+    for(int i=0; i<4; i++)
+    {
         decoder[i] = CreateDecoder(p_decoder, vSAT_NEG_VAR, vSAT_POS_VAR, vSAT_NEG_MSG, vSAT_POS_MSG/*, msOffset, msFactor, OFFSET_FACTOR, NORMALIZED_FACTOR*/);
     }
 
     Encoder *encoder[MAX_THREADS];
-    for(int i=0; i<4; i++){
+    for(int i=0; i<4; i++)
+    {
         encoder[i] = EncoderLibrary(p_simulation.real_encoder, simu_data[i]);
     }
 
     CChanel* noise[MAX_THREADS];
-    for(int i=0; i<4; i++){
+    for(int i=0; i<4; i++)
+    {
         noise[i] = CreateChannel(simu_data[i], p_simulation.qpsk_channel, p_simulation.Es_N0);
         noise[i]->setNormalize( p_simulation.norm_channel );
     }
@@ -644,7 +648,7 @@ int main(int argc, char* argv[]) {
 
     }
 
-    // ON FAIT LE MENAGE PARMIS TOUS LES OBJETS CREES DYNAMIQUEMENT...
+//     ON FAIT LE MENAGE PARMIS TOUS LES OBJETS CREES DYNAMIQUEMENT...
     for(int i=0; i<4; i++){
         delete simu_data[i];
         delete noise[i];

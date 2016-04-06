@@ -3,7 +3,7 @@ project(${PROJECTNAME})
 cmake_minimum_required(VERSION 2.8)
 # set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall -fopenmp -O3 -march=native -std=c++11" )
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall -fopenmp -O3 -march=native -mtune=cortex-a15 -marm -mfpu=neon -finline -funroll-loops -std=c++11 -flax-vector-conversions" )
 
 include_directories(
 ${CMAKE_CURRENT_SOURCE_DIR}
@@ -17,10 +17,10 @@ set(srcs
  CDecoder/template/CDecoder.cpp 
  CDecoder/template/CDecoder_fixed.cpp 
  CDecoder/template/CDecoder_fixed_x86.cpp 
-#  CDecoder/template/CDecoder_fixed_SSE.cpp 
+ CDecoder/template/CDecoder_fixed_SSE.cpp 
  CDecoder/OMS/CDecoder_OMS_fixed_x86.cpp
-#  CDecoder/OMS/CDecoder_OMS_fixed_SSE.cpp
-#  CDecoder/OMS/CDecoder_OMS_fixed_NEON16_v2.cpp
+ CDecoder/OMS/CDecoder_OMS_fixed_SSE.cpp 
+ CDecoder/OMS/CDecoder_OMS_fixed_NEON16_v2.cpp
  CEncoder/CFakeEncoder.cpp 
  CEncoder/Encoder.cpp 
  CEncoder/GenericEncoder.cpp 
@@ -30,7 +30,7 @@ set(srcs
  CTerminal/CTerminal.cpp 
  CTimer/CTimer.cpp 
  CTrame/CTrame.cpp 
-#  CTools/transpose_neon.cpp 
+ CTools/transpose_neon.cpp 
  main.cpp
 )
 
@@ -40,8 +40,6 @@ set(hdrs
 	
 add_executable(${PROJECTNAME} ${srcs} ${hdrs})
 
-target_link_libraries(${PROJECTNAME}  
--lboost_system  -lboost_timer
--lpthread -lm -ldl)
+target_link_libraries(${PROJECTNAME}  -lpthread -lm)
 
 install(TARGETS ${PROJECTNAME} RUNTIME DESTINATION bin) 
