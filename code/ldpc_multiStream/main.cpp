@@ -7,6 +7,7 @@
 //#include  <time.h>
 #include  <string.h>
 //#include  <limits.h>
+#include "pthread.h"
 
 #include <cuda.h>
 #include <cuda_runtime.h>
@@ -98,7 +99,7 @@ int main(int argc, char* argv[])
 
 	double Eb_N0;
 	double MinSignalSurBruit  = 0.50;
-	double MaxSignalSurBruit  = 1;
+	double MaxSignalSurBruit  = 1.00;
 	double PasSignalSurBruit  = 0.10;
     int    NOMBRE_ITERATIONS  = 20;
 	int    STOP_TIMER_SECOND  = -1;
@@ -210,8 +211,11 @@ int main(int argc, char* argv[])
 	CTrame simu_data(_N, _K, NB_THREAD_ON_GPU);
 
 	CGPUDecoder* decoder;
-	if( strcmp(type, "fMS") == 0 ){
+	CGPUDecoder* decoder_t;
+	if( strcmp(type, "fMS") == 0 )
+	{
 		decoder = new CGPU_Decoder_MS_SIMD( NB_THREAD_ON_GPU, _N, _K, _M );
+		decoder_t = new CGPU_Decoder_MS_SIMD( NB_THREAD_ON_GPU, _N, _K, _M );
 	}else if( strcmp(type, "MS") == 0 ){
 		decoder = new CGPU_Decoder_MS_SIMD( NB_THREAD_ON_GPU, _N, _K, _M );
 	}else if( strcmp(type, "OMS") == 0 ){
@@ -227,6 +231,7 @@ int main(int argc, char* argv[])
 		exit( 0 );
 	}
 	decoder->initialize();
+	decoder_t->initialize();
 
 
 	CChanel_AWGN_SIMD noise(&simu_data, 4, QPSK_CHANNEL, Es_N0);
@@ -287,8 +292,8 @@ int main(int argc, char* argv[])
 			errCounters.accumulate( &errCounter );
 
             //
-            // ON compare le Frame Error avec la limite imposee par l'utilisateur. Si on depasse
-            // alors on affiche les resultats sur Eb/N0 courant.
+			// ON compares the frame error with the limits imposed by the user. 
+			// If it exceeds then displays the results on Eb / N0 current.
             //
 			if ( errCounters.fe_limit_achieved() == true ){
                break;

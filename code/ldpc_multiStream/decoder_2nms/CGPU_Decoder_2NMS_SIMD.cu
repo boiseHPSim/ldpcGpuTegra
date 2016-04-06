@@ -9,14 +9,14 @@
 
 /*----------------------------------------------------------------------------*/
 
-#include "CGPU_Decoder_MS_SIMD.h"
+#include "CGPU_Decoder_2NMS_SIMD.h"
 #include "../transpose/GPU_Transpose.h"
 #include "../transpose/GPU_Transpose_uint8.h"
 #include "../tools/debug_fx.h"
 
 static const size_t BLOCK_SIZE = 128; // 96 for exp.
 
-CGPU_Decoder_MS_SIMD::CGPU_Decoder_MS_SIMD(size_t _nb_frames, size_t n, size_t k, size_t m):
+CGPU_Decoder_2NMS_SIMD::CGPU_Decoder_2NMS_SIMD(size_t _nb_frames, size_t n, size_t k, size_t m):
 CGPUDecoder(_nb_frames, n, k, m)
 {
 	size_t nb_blocks = nb_frames / BLOCK_SIZE;
@@ -41,7 +41,7 @@ CGPUDecoder(_nb_frames, n, k, m)
         int memoryBusWidth;
 */
   	struct cudaFuncAttributes attr;    
-	cudaFuncGetAttributes(&attr, LDPC_Sched_Stage_1_MS_SIMD); 
+	cudaFuncGetAttributes(&attr, LDPC_Sched_Stage_1_2NMS_SIMD);
 
   	int nMP      = devProp.multiProcessorCount; // NOMBRE DE STREAM PROCESSOR
   	int nWarp    = attr.maxThreadsPerBlock/32;  // PACKET DE THREADs EXECUTABLES EN PARALLELE
@@ -58,7 +58,6 @@ CGPUDecoder(_nb_frames, n, k, m)
   	printf("(II) - Nombre de local/thr  : %ld\n", attr.localSizeBytes);
   	printf("(II) - Nombre de shared/thr : %ld\n", attr.sharedSizeBytes);
 
-	printf("(II) Number of attr.reg: %d\n", nDOF);
   	printf("(II) Nombre de nDOF    : %d\n", nDOF);
   	printf("(II) Nombre de nBperMP : %d\n", nBperMP);
   	printf("(II) Nombre de nBperMP : %d\n", minB);
@@ -86,16 +85,16 @@ CGPUDecoder(_nb_frames, n, k, m)
 }
 
 
-CGPU_Decoder_MS_SIMD::~CGPU_Decoder_MS_SIMD()
+CGPU_Decoder_2NMS_SIMD::~CGPU_Decoder_2NMS_SIMD()
 {
 }
 
-void CGPU_Decoder_MS_SIMD::initialize()
+void CGPU_Decoder_2NMS_SIMD::initialize()
 {
 }
 
 
-void CGPU_Decoder_MS_SIMD::decode(float Intrinsic_fix[_N], int Rprime_fix[_N], int nombre_iterations)
+void CGPU_Decoder_2NMS_SIMD::decode(float Intrinsic_fix[_N], int Rprime_fix[_N], int nombre_iterations)
 {
     cudaError_t Status;
 
@@ -117,7 +116,7 @@ void CGPU_Decoder_MS_SIMD::decode(float Intrinsic_fix[_N], int Rprime_fix[_N], i
 		Interleaver_uint8<<<grid, threads>>>((int*)d_MSG_C_2_V, (int*)device_V, _N, nb_frames);
 	}
 
-    LDPC_Sched_Stage_1_MS_SIMD<<<nb_blocks, BLOCK_SIZE>>>((unsigned int*)device_V, (unsigned int*)d_MSG_C_2_V, d_transpose, nombre_iterations);
+    LDPC_Sched_Stage_1_2NMS_SIMD<<<nb_blocks, BLOCK_SIZE>>>((unsigned int*)device_V, (unsigned int*)d_MSG_C_2_V, d_transpose, nombre_iterations);
 
 	//
 	// DESENTRELACEMENT DES DONNEES POST-DECODAGE (device_V => device_R)
