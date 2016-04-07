@@ -15,6 +15,10 @@ CChanel::~CChanel(){
 
 }
 
+double CChanel::getEb_N0()
+{
+	return Eb_N0;
+}
 
 
 //void CChanel::configure(double _Eb_N0){

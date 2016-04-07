@@ -31,6 +31,7 @@ set(srcs
 	tools/debug_fx.cpp
 	trame/CTrame.cpp
 	matrix/constantes_decoder.cpp
+	queue/thread.cpp
 )
 
 set(hdrs
@@ -70,6 +71,9 @@ set(hdrs
 	terminal/CTerminal.h
 	tools/debug_fx.h
 	trame/CTrame.h
+	
+	queue/thread.h 
+	queue/wqueue.h
 )
 
 set(kernels

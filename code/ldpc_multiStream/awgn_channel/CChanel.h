@@ -38,6 +38,7 @@ public:
     virtual ~CChanel();
     virtual void configure(double _Eb_N0) = 0;  // VIRTUELLE PURE
     virtual void generate() = 0;                // VIRTUELLE PURE    
+    double getEb_N0();
 };
 
 #endif
