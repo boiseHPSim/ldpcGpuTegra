@@ -1,3 +1,5 @@
+#ifndef __CGPU_Decoder_OMS_SIMD_H__
+#define __CGPU_Decoder_OMS_SIMD_H__
 
 #include "../decoder_template/CGPUDecoder.h"
 #include "./cuda/CUDA_OMS_SIMD.h"
@@ -10,3 +12,4 @@ public:
     void decode(float var_nodes[_N], int Rprime_fix[_N], int nombre_iterations);
 };
 
+#endif

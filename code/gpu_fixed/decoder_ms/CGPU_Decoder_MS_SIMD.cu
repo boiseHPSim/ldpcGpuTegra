@@ -80,7 +80,7 @@ CGPUDecoder(_nb_frames, n, k, m)
 	  	printf("(II) Best BLOCK_SIZE   : %d\n", nBperMP/256);
   	}else{
 	  	printf("(II) Best BLOCK_SIZE   : ???\n");
-	  	exit( 0 );
+// 	  	exit( 0 );
   	}
 
 }

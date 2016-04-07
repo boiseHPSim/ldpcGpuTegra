@@ -5,7 +5,7 @@ find_package(CUDA QUIET REQUIRED)
 
 include_directories(
 ${CUDA_INCLUDE_DIRS}
-# ${CMAKE_SOURCE_DIR}
+${CMAKE_SOURCE_DIR}
 )
 
 link_directories(
@@ -32,6 +32,7 @@ set(srcs
 	trame/CTrame.cpp
 	matrix/constantes_decoder.cpp
 	queue/thread.cpp
+	queue/handler.cpp
 )
 
 set(hdrs
@@ -74,6 +75,7 @@ set(hdrs
 	
 	queue/thread.h 
 	queue/wqueue.h
+	queue/handler.h
 )
 
 set(kernels
