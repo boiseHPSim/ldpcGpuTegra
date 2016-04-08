@@ -211,10 +211,10 @@ int main(int argc, char* argv[])
     wqueue<WorkItem*>  workQueue;
 	
     Worker * thread1 = new Worker(workQueue, type, NB_THREAD_ON_GPU, FRAME_ERROR_LIMIT, NOMBRE_ITERATIONS);
-    Worker* thread2 = new Worker(workQueue, type, NB_THREAD_ON_GPU, FRAME_ERROR_LIMIT, NOMBRE_ITERATIONS);
+//    Worker* thread2 = new Worker(workQueue, type, NB_THREAD_ON_GPU, FRAME_ERROR_LIMIT, NOMBRE_ITERATIONS);
 
     thread1->start();
-    thread2->start();
+//    thread2->start();
 	
 	Eb_N0 = MinSignalSurBruit;
 	int temps = 0, fdecoding = 0;
@@ -234,7 +234,6 @@ int main(int argc, char* argv[])
         	break;
         }
 
-        
 		Eb_N0 = Eb_N0 + PasSignalSurBruit;
 
 // 		std::cerr << "EB_N0 = " << Eb_N0 << std::endl;

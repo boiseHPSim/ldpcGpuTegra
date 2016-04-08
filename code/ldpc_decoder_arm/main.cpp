@@ -24,7 +24,7 @@ using namespace std;
 #include <omp.h>
 #endif
 
-#define pi  3.1415926536
+//#define pi  3.1415926536
 
 #include "./CTimer/CTimer.h"
 #include "./CTrame/CTrame.h"
