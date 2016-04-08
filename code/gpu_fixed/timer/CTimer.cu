@@ -28,9 +28,12 @@ CTimer::~CTimer(){
 
 
 void CTimer::start(){
-    if( isRunning == true ){
+    if( isRunning == true )
+	{
         cout << "(EE) CTimer :: trying to start a CTimer object that is already running !" << endl;
-    }else{
+    }
+    else
+	{
         isRunning = true;
     	cudaEventRecord(_start, 0);
     }

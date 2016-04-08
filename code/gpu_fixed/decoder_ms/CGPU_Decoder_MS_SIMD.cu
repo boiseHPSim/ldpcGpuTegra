@@ -98,6 +98,9 @@ void CGPU_Decoder_MS_SIMD::initialize()
 void CGPU_Decoder_MS_SIMD::decode(float Intrinsic_fix[_N], int Rprime_fix[_N], int nombre_iterations)
 {
     cudaError_t Status;
+	
+	cudaStream_t streams;
+    cudaStreamCreate(&streams);
 
     size_t nb_blocks = nb_frames / BLOCK_SIZE;
 	if( nb_frames % BLOCK_SIZE != 0 ){
@@ -114,10 +117,10 @@ void CGPU_Decoder_MS_SIMD::decode(float Intrinsic_fix[_N], int Rprime_fix[_N], i
 	{
 		dim3 grid(1, nb_frames/32);
 		dim3 threads(32, 32);
-		Interleaver_uint8<<<grid, threads>>>((int*)d_MSG_C_2_V, (int*)device_V, _N, nb_frames);
+		Interleaver_uint8<<<grid, threads, 0, streams>>>((int*)d_MSG_C_2_V, (int*)device_V, _N, nb_frames);
 	}
 
-    LDPC_Sched_Stage_1_MS_SIMD<<<nb_blocks, BLOCK_SIZE>>>((unsigned int*)device_V, (unsigned int*)d_MSG_C_2_V, d_transpose, nombre_iterations);
+    LDPC_Sched_Stage_1_MS_SIMD<<<nb_blocks, BLOCK_SIZE, 0, streams>>>((unsigned int*)device_V, (unsigned int*)d_MSG_C_2_V, d_transpose, nombre_iterations);
 
 	//
 	// DESENTRELACEMENT DES DONNEES POST-DECODAGE (device_V => device_R)
@@ -131,14 +134,14 @@ void CGPU_Decoder_MS_SIMD::decode(float Intrinsic_fix[_N], int Rprime_fix[_N], i
 		dim3 threads(32, 32);
 //		printf("(II) Processing grid = %d, %d, %d;\n", grid.x, grid.y, grid.z);
 //		printf("(II) Thread grid     = %d, %d, %d;\n", threads.x, threads.y, threads.z);
-		InvInterleaver_uint8<<<grid, threads>>>((int*)device_V, (int*)d_MSG_C_2_V, _N, nb_frames);
+		InvInterleaver_uint8<<<grid, threads, 0, streams>>>((int*)device_V, (int*)d_MSG_C_2_V, _N, nb_frames);
 	}
 #else
 	{
 		unsigned int NB_TRAMES    = nb_frames;
 		unsigned int FRAME_LENGTH = _N;
 		dim3 grid(NB_TRAMES/TILE_DIM, FRAME_LENGTH/TILE_DIM), threads(TILE_DIM,BLOCK_ROWS);
-		transposeDiagonal_and_hard_decision<<<grid, threads>>>((unsigned int*)d_MSG_C_2_V, (unsigned int*)device_V, NB_TRAMES, FRAME_LENGTH);
+		transposeDiagonal_and_hard_decision<<<grid, threads, 0, streams>>>((unsigned int*)d_MSG_C_2_V, (unsigned int*)device_V, NB_TRAMES, FRAME_LENGTH);
 	}
 #endif
     //
@@ -147,4 +150,5 @@ void CGPU_Decoder_MS_SIMD::decode(float Intrinsic_fix[_N], int Rprime_fix[_N], i
     Status = cudaMemcpy(Rprime_fix, d_MSG_C_2_V, sz_nodes * sizeof(float), cudaMemcpyDeviceToHost);
 	ERROR_CHECK(Status, __FILE__, __LINE__);
 
+	cudaStreamSynchronize(0);
 }

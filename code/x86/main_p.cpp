@@ -443,7 +443,7 @@ int main(int argc, char* argv[]) {
         }
 
         //
-        // ON CREE UN OBJET POUR LA MESURE DU TEMPS DE SIMULATION (REMISE A ZERO POUR CHAQUE Eb/N0)
+        // ON CREATING AN OBJECT FOR MEASURING TIME SIMULATION (REMISE A ZERO POUR CHAQUE Eb/N0)
         //
         CTimer temps_ecoule(true);
 
@@ -573,7 +573,7 @@ int main(int argc, char* argv[]) {
                 }
             }
             //
-            // ON COMPTE LE NOMBRE D'ERREURS DANS LA TRAME DECODE
+            // ON ACCOUNT THE NUMBER OF ERRORS IN THE FRAME decoded
             //
             for (int q = 0; q < loopf; q++) {
 
