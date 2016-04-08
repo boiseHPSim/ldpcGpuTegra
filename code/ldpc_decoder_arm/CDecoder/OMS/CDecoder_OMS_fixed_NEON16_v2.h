@@ -22,11 +22,14 @@
 #define CLASS_CDecoder_NEON16_OMS_V2_
 
 #include "../template/CDecoder_fixed_SSE.h"
+#include "cuda/decoder_oms_v2/CGPU_Decoder_MS_SIMD_v2.h"
+
 
 class CDecoder_OMS_fixed_NEON16_v2 : public CDecoder_fixed_SSE{
 private:
     int8x16_t** p_vn_addr;
     signed char offset;
+    CGPU_Decoder_MS_SIMD_v2* gpuDecoder ;//= new CGPU_Decoder_MS_SIMD_v2( NB_THREAD_ON_GPU, _N, _K, _M );
 
 public:
     CDecoder_OMS_fixed_NEON16_v2();
@@ -36,6 +39,7 @@ public:
 
 public:
     bool decode_8bits  (signed char var_nodes[], signed char Rprime_fix[], int nombre_iterations);
+    bool decode_8bits_test  (signed char var_nodes[], signed char Rprime_fix[], int nombre_iterations);
 };
 
 #endif
