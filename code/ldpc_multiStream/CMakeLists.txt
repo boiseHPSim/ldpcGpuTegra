@@ -19,7 +19,7 @@ set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall  -fopenmp")
 set(CUDA_NVCC_FLAGS
     ${CUDA_NVCC_FLAGS}
     -O2
-    -arch=sm_50
+    -arch=sm_21
     )
 
 set(srcs

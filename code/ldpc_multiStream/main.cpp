@@ -234,7 +234,6 @@ int main(int argc, char* argv[])
         	break;
         }
 
-        
 		Eb_N0 = Eb_N0 + PasSignalSurBruit;
 
 // 		std::cerr << "EB_N0 = " << Eb_N0 << std::endl;

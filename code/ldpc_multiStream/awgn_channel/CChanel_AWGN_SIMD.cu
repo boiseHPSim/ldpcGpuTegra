@@ -60,7 +60,8 @@ CChanel_AWGN_SIMD::~CChanel_AWGN_SIMD(){
 //    printf("(DD) STOP  CChanel_AWGN_SIMD::~CChanel_AWGN_SIMD() !\n");
 }
 
-void CChanel_AWGN_SIMD::configure(double _Eb_N0) {
+void CChanel_AWGN_SIMD::configure(double _Eb_N0) 
+{
     rendement = (float) (_vars) / (float) (_data);
     if (es_n0) {
         Eb_N0 = _Eb_N0 - 10.0 * log10(2 * rendement);
