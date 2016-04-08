@@ -9,7 +9,7 @@ ${CMAKE_SOURCE_DIR}
 )
 
 link_directories(
-"/usr/local/cuda/lib64/"
+"/usr/local/cuda/lib/"
 )
 
 # set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-Wall")

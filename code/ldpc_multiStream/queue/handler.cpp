@@ -81,7 +81,7 @@ void* Worker::run()
 				//
 				//	ON LANCE LE TRAITEMENT SUR PLUSIEURS THREAD...
 				//
-// 					CTimer essai(true);
+ 					CTimer essai(true);
 // 					decoder->decode( item->getData()->get_t_noise_data(), item->getData()->get_t_decode_data(), numberIter );
 // 					temps += essai.get_time_ms();
 				fdecoding += 1;

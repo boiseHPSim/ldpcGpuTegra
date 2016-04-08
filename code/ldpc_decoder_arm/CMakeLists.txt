@@ -3,10 +3,27 @@ project(${PROJECTNAME})
 cmake_minimum_required(VERSION 2.8)
 # set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall -fopenmp -O3 -march=native -mtune=cortex-a15 -marm -mfpu=neon -finline -funroll-loops -std=c++11 -flax-vector-conversions" )
+find_package(CUDA QUIET REQUIRED)
+
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall -fopenmp -O3 -march=native -mtune=cortex-a15 -marm -mfpu=neon -finline -funroll-loops -flax-vector-conversions" )
+
+
+
 
 include_directories(
 ${CMAKE_CURRENT_SOURCE_DIR}
+${CUDA_INCLUDE_DIRS}
+
+)
+
+link_directories(
+"/usr/local/cuda/lib/"
+)
+
+set(CUDA_NVCC_FLAGS
+    ${CUDA_NVCC_FLAGS}
+    -O2
+    -arch=sm_32
 )
 
 set(srcs
@@ -30,16 +47,47 @@ set(srcs
  CTerminal/CTerminal.cpp 
  CTimer/CTimer.cpp 
  CTrame/CTrame.cpp 
- CTools/transpose_neon.cpp 
+ CTools/transpose_neon.cpp
+ cuda/matrix/constantes_decoder.cpp 
+ cuda/tools/debug_fx.cpp
+ cuda/decoder_template/CGPUDecoder.cpp
+ cuda/matrix/constantes_decoder.cpp
  main.cpp
 )
 
 set(hdrs
-	
+cuda/test.h	
+cuda/decoder_oms_v2/CGPU_Decoder_MS_SIMD_v2.h
+cuda/decoder_oms_v2/cuda/CUDA_OMS_SIMD_v2.h  
+cuda/decoder_oms_v2/cuda/simd_functions.h
+
+cuda/decoder_template/CGPUDecoder.h
+cuda/decoder_template/GPU_Scheduled_functions.h
+cuda/custom_api/custom_cuda.h
+
+cuda/transpose/GPU_Transpose.h
+cuda/transpose/GPU_Transpose_uint8.h
+cuda/transpose/simd_functions.h
+
+cuda/tools/debug_fx.h
 	)
 	
-add_executable(${PROJECTNAME} ${srcs} ${hdrs})
+set(kernels
+cuda/test.cu
 
-target_link_libraries(${PROJECTNAME}  -lpthread -lm)
+cuda/transpose/GPU_Transpose.cu
+cuda/transpose/GPU_Transpose_uint8.cu
+
+cuda/custom_api/custom_cuda.cu
+
+cuda/decoder_oms_v2/CGPU_Decoder_MS_SIMD_v2.cu
+cuda/decoder_oms_v2/cuda/CUDA_OMS_SIMD_v2.cu
+cuda/decoder_template/GPU_Scheduled_functions.cu
+)
+	
+cuda_add_executable(${PROJECTNAME} ${srcs} ${hdrs} ${kernels})
+#add_executable(${PROJECTNAME} ${srcs} ${hdrs})
+
+target_link_libraries(${PROJECTNAME}  -lpthread -lm -lcurand)
 
 install(TARGETS ${PROJECTNAME} RUNTIME DESTINATION bin) 
