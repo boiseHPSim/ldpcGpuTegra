@@ -29,6 +29,7 @@ class CDecoder_fixed_SSE : public CDecoder_fixed{
 protected:
     int8x16_t* var_nodes;
     int8x16_t* var_mesgs;
+	
 
 public:
     CDecoder_fixed_SSE();

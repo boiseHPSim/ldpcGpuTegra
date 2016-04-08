@@ -31,6 +31,8 @@ extern void CUDA_MALLOC_HOST(unsigned int** ptr, size_t nbElements, const char *
 
 extern void CUDA_MALLOC_HOST(char** ptr, size_t nbElements, const char * file, int line);
 
+extern void CUDA_MALLOC_HOST(signed char** ptr, size_t nbElements, const char * file, int line);
+
 extern void CUDA_MALLOC_DEVICE(float** ptr, size_t nbElements, const char * file, int line);
 
 extern void CUDA_MALLOC_DEVICE(int** ptr, size_t nbElements, const char * file, int line);
@@ -38,5 +40,7 @@ extern void CUDA_MALLOC_DEVICE(int** ptr, size_t nbElements, const char * file, 
 extern void CUDA_MALLOC_DEVICE(unsigned int** ptr, size_t nbElements, const char * file, int line);
 
 extern void CUDA_MALLOC_DEVICE(char** ptr, size_t nbElements, const char * file, int line);
+
+extern void CUDA_MALLOC_DEVICE(signed char** ptr, size_t nbElements, const char * file, int line);
 
 #endif /* CUSTOM_CUDA_H_ */

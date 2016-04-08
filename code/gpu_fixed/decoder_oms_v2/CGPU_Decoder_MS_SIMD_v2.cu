@@ -128,58 +128,58 @@ void CGPU_Decoder_MS_SIMD_v2::decode(float Intrinsic_fix[_N], int Rprime_fix[_N]
 	}
 
 
-//#define MULTISTREAM
-//#ifdef MULTISTREAM
-//	cudaStream_t stream[16];
-//	for(int y=0; y<nb_blocks; y++){
-//		Status = cudaStreamCreate(&stream[y]);
-//	}
-//
-//	for(int y=0; y<nb_blocks; y++){
-//		unsigned int offSet = y * (sz_nodes/nb_blocks);
-//
-//		Status = cudaMemcpyAsync(
-//				device_V + offSet,						Intrinsic_fix + offSet,
-//				(sz_nodes/nb_blocks) * sizeof(float),	cudaMemcpyHostToDevice,
-//				stream[y]);
-//
-//
-//	    LDPC_Sched_Stage_1_MS_SIMD_deg6_only<<<1, BLOCK_SIZE, 0, stream[y]>>>(
-//	    		(unsigned int*)(device_V    + offSet),
-//	    		(unsigned int*)(d_MSG_C_2_V + offSet),
-//	    		d_transpose, nombre_iterations);
-//
-//		{
-//			unsigned int NB_TRAMES    = nb_blocks; // DIFFERENCE ICI
-//			unsigned int FRAME_LENGTH = _N;
-//			dim3 grid(NB_TRAMES/TILE_DIM, FRAME_LENGTH/TILE_DIM), threads(TILE_DIM,BLOCK_ROWS);
-//			transposeDiagonal_and_hard_decision<<<grid, threads, 0, stream[y]>>>(
-//					(float*)(d_MSG_C_2_V + offSet),
-//					(float*)(device_V    + offSet),
-//					NB_TRAMES, FRAME_LENGTH);
-//		}
-//
-//	    Status = cudaMemcpyAsync(
-//	    			Rprime_fix  + offSet,
-//	    			d_MSG_C_2_V + offSet,
-//	    			(sz_nodes/nb_blocks) * sizeof(float),
-//	    			cudaMemcpyDeviceToHost, stream[y]);
-//
-//	}
-//
-//	for(int y=0; y<nb_blocks; y++){
-//		Status = cudaStreamSynchronize(stream[y]);
-//		ERROR_CHECK(Status, __FILE__, __LINE__);
-//	}
-//
-//	for(int y=0; y<nb_blocks; y++){
-//		Status = cudaStreamDestroy(stream[y]);
-//		ERROR_CHECK(Status, __FILE__, __LINE__);
-//	}
-//
-//	return;
-//
-//#endif
+// #define MULTISTREAM
+// #ifdef MULTISTREAM
+// 	cudaStream_t stream[16];
+// 	for(int y=0; y<nb_blocks; y++){
+// 		Status = cudaStreamCreate(&stream[y]);
+// 	}
+// 
+// 	for(int y=0; y<nb_blocks; y++){
+// 		unsigned int offSet = y * (sz_nodes/nb_blocks);
+// 
+// 		Status = cudaMemcpyAsync(
+// 				device_V + offSet,						Intrinsic_fix + offSet,
+// 				(sz_nodes/nb_blocks) * sizeof(float),	cudaMemcpyHostToDevice,
+// 				stream[y]);
+// 
+// 
+// 	    LDPC_Sched_Stage_1_MS_SIMD_Deg_6_Only<<<1, BLOCK_SIZE, 0, stream[y]>>>(
+// 	    		(unsigned int*)(device_V    + offSet),
+// 	    		(unsigned int*)(d_MSG_C_2_V + offSet),
+// 	    		d_transpose, nombre_iterations);
+// 
+// 		{
+// 			unsigned int NB_TRAMES    = nb_blocks; // DIFFERENCE ICI
+// 			unsigned int FRAME_LENGTH = _N;
+// 			dim3 grid(NB_TRAMES/TILE_DIM, FRAME_LENGTH/TILE_DIM), threads(TILE_DIM,BLOCK_ROWS);
+// 			transposeDiagonal_and_hard_decision<<<grid, threads, 0, stream[y]>>>(
+// 					(float*)(d_MSG_C_2_V + offSet),
+// 					(float*)(device_V    + offSet),
+// 					NB_TRAMES, FRAME_LENGTH);
+// 		}
+// 
+// 	    Status = cudaMemcpyAsync(
+// 	    			Rprime_fix  + offSet,
+// 	    			d_MSG_C_2_V + offSet,
+// 	    			(sz_nodes/nb_blocks) * sizeof(float),
+// 	    			cudaMemcpyDeviceToHost, stream[y]);
+// 
+// 	}
+// 
+// 	for(int y=0; y<nb_blocks; y++){
+// 		Status = cudaStreamSynchronize(stream[y]);
+// 		ERROR_CHECK(Status, __FILE__, __LINE__);
+// 	}
+// 
+// 	for(int y=0; y<nb_blocks; y++){
+// 		Status = cudaStreamDestroy(stream[y]);
+// 		ERROR_CHECK(Status, __FILE__, __LINE__);
+// 	}
+// 
+// 	return;
+// 
+// #endif
 
 	//
 	// ON COPIE LES DONNEES DANS => device_V

@@ -16,6 +16,7 @@
 #include "../custom_api/custom_cuda.h"
 #include "../matrix/constantes_gpu.h"
 
+
 class CGPUDecoder{
 protected:
     float* device_V;

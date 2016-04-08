@@ -26,10 +26,10 @@ set(srcs
 	main.cpp
 	awgn_channel/CChanel.cpp
 	ber_analyzer/CErrorAnalyzer.cpp
-	decoder_template/CGPUDecoder.cpp
 	terminal/CTerminal.cpp
-	tools/debug_fx.cpp
 	trame/CTrame.cpp
+	tools/debug_fx.cpp
+	decoder_template/CGPUDecoder.cpp
 	matrix/constantes_decoder.cpp
 )
 

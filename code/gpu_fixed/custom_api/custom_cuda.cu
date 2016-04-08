@@ -70,6 +70,17 @@ void CUDA_MALLOC_HOST(char** ptr, size_t nbElements, const char * file, int line
     ERROR_CHECK(Status, __FILE__, __LINE__);
 }
 
+void CUDA_MALLOC_HOST(signed char** ptr, size_t nbElements, const char * file, int line){
+    cudaError_t Status;
+    size_t nbytes = nbElements * sizeof(signed char);
+    Status     = cudaMallocHost(ptr, nbytes);
+	aDevice   += nbytes;
+#if DEBUG == 1
+	printf("(II)    + Allocating (%s:%d) Host   Memory, %ld elements (%ld ko) adr [%p, %p]\n", FilenamePtr(file), line,  nbElements, nbytes/1024, *ptr, *ptr+nbElements-1);
+#endif
+    ERROR_CHECK(Status, __FILE__, __LINE__);
+}
+
 void CUDA_MALLOC_DEVICE(float** ptr, size_t nbElements, const char * file, int line){
     cudaError_t Status;
     size_t nbytes = nbElements * sizeof(float);
@@ -109,6 +120,18 @@ void CUDA_MALLOC_DEVICE(unsigned int** ptr, size_t nbElements, const char * file
 void CUDA_MALLOC_DEVICE(char** ptr, size_t nbElements, const char * file, int line){
     cudaError_t Status;
     size_t nbytes = nbElements * sizeof(char);
+    Status     = cudaMalloc(ptr, nbytes);
+	aDevice   += nbytes;
+#if DEBUG == 1
+	printf("(II)    + Allocating (%s:%d) Device Memory, %ld elements (%ld ko) adr [%p, %p]\n", FilenamePtr(file), line, nbElements, nbytes/1024, *ptr, *ptr+nbElements-1);
+//	printf("(II)    + Memory allocated on GPU device = %d Mo\n", aDevice/1024/1024);
+#endif
+    ERROR_CHECK(Status, __FILE__, __LINE__);
+}
+
+void CUDA_MALLOC_DEVICE(signed char** ptr, size_t nbElements, const char * file, int line){
+    cudaError_t Status;
+    size_t nbytes = nbElements * sizeof(signed char);
     Status     = cudaMalloc(ptr, nbytes);
 	aDevice   += nbytes;
 #if DEBUG == 1
