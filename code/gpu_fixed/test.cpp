@@ -292,7 +292,7 @@ int main(int argc, char* argv[])
         
     CErrorAnalyzer* errCounter[MAX_THREADS];
     
-	long int etime[MAX_THREADS] = {0, 0, 0, 0};
+	long etime[MAX_THREADS] = {0, 0, 0, 0};
     CErrorAnalyzer errCounters(simu_data[0], FRAME_ERROR_LIMIT, false, false);
 	if(STOP_TIMER_SECOND == -1)
     while (Eb_N0 <= MaxSignalSurBruit)
@@ -349,7 +349,7 @@ int main(int argc, char* argv[])
             {
                 CTimer essai(true);
 				decoder[0]->decode_stream( simu_data[0]->get_t_noise_data(), simu_data[0]->get_t_decode_data(), NOMBRE_ITERATIONS );
-                etime[0] += essai.get_time_us();
+                etime[0] += essai.get_time_ms();
                 noise[0]->generate();  // ON GENERE LE BRUIT DU CANAL
                 errCounter[0]->generate();
 				#pragma omp atomic
@@ -360,7 +360,7 @@ int main(int argc, char* argv[])
             {
                 CTimer essai(true);
                 decoder[1]->decode_stream( simu_data[1]->get_t_noise_data(), simu_data[1]->get_t_decode_data(), NOMBRE_ITERATIONS );
-                etime[1] += essai.get_time_us();
+                etime[1] += essai.get_time_ms();
                 noise[1]->generate();  // ON GENERE LE BRUIT DU CANAL
                 errCounter[1]->generate();
 				#pragma omp atomic
@@ -371,7 +371,7 @@ int main(int argc, char* argv[])
             {
                 CTimer essai(true);
 				decoder[2]->decode_stream( simu_data[2]->get_t_noise_data(), simu_data[2]->get_t_decode_data(), NOMBRE_ITERATIONS );
-                etime[2] += essai.get_time_us();
+                etime[2] += essai.get_time_ms();
                 noise[2]->generate();  // ON GENERE LE BRUIT DU CANAL
                 errCounter[2]->generate();
 				#pragma omp atomic
@@ -382,7 +382,7 @@ int main(int argc, char* argv[])
             {
                 CTimer essai(true);
                 decoder[3]->decode_stream( simu_data[3]->get_t_noise_data(), simu_data[3]->get_t_decode_data(), NOMBRE_ITERATIONS );
-                etime[3] += essai.get_time_us();
+                etime[3] += essai.get_time_ms();
                 noise[3]->generate();  // ON GENERE LE BRUIT DU CANAL
                 errCounter[3]->generate();
 				#pragma omp atomic
@@ -451,7 +451,7 @@ int main(int argc, char* argv[])
             printf("(II) + TIME / RUN = %dms\n", temps/1000);
             int   workL =  errCounters.nb_processed_frames();// NUM_ACTIVE_THREADS * NB_THREAD_ON_GPU;
 			int flt = sizeof(float);
-			temps /= 1000;
+// 			temps /= 1000;
             float   kbits = ((float)(workL * _N / temps) );
             float mbits = ((float)kbits/1000.0);
             printf("(II) + DECODER LATENCY (ms)     = %d\n", temps/1000);

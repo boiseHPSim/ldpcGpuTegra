@@ -70,6 +70,7 @@ set(hdrs
 	terminal/CTerminal.h
 	tools/debug_fx.h
 	trame/CTrame.h
+	timer/CTimer.h
 )
 
 set(kernels
