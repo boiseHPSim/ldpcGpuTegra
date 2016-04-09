@@ -514,7 +514,7 @@ int main(int argc, char* argv[])
             CTimer t_Timer1(true);
             while (t_Timer1.get_time_sec() < t_eval) 
 			{
-                for (int qq = 0; qq < 10; qq++) 
+                for (int qq = 0; qq < 256; qq++) 
 				{
                     // to limit timer runtime impact on performances (for very small LDPC codes)
                     // Indeed, depending on OS and CTimer implementations, time read can be long...
@@ -523,7 +523,7 @@ int main(int argc, char* argv[])
                 }
             }
 //             t_Timer1.stop();
-            float debit = _N * ((exec ) / ((float) t_Timer1.get_time_sec()));
+            float debit = _N * ((exec * NB_THREAD_ON_GPU ) / ((float) t_Timer1.get_time_sec()));
             debit /= 1000000.0f;
             printf("(PERF1) LDPC decoder air throughput = %1.6f Mbps\n", debit);
         }
@@ -554,10 +554,10 @@ int main(int argc, char* argv[])
                 }
                 exec += 2 * looper;
             }
-            t_Timer2.stop();
+//             t_Timer2.stop();
 
             // for each decoder run, we decoded nb_frames codewords (depending on the SIMD width)
-            float debit = _N * ((exec) / ((float) t_Timer2.get_time_sec()));
+            float debit = _N * ((exec * NB_THREAD_ON_GPU) / ((float) t_Timer2.get_time_sec()));
             debit /= 1000000.0f;
             printf("(PERF2) LDPC decoder air throughput = %1.3f Mbps\n", debit);
         }
@@ -600,9 +600,9 @@ int main(int argc, char* argv[])
                 }
                 exec += 4 * looper;
             }
-            t_Timer3.stop();
+//             t_Timer3.stop();
 
-            float debit = _N * ((exec) / ((float) t_Timer3.get_time_sec()));
+            float debit = _N * ((exec * NB_THREAD_ON_GPU) / ((float) t_Timer3.get_time_sec()));
             debit /= 1000000.0f;
             printf("(PERF4) LDPC decoder air throughput = %1.3f Mbps\n", debit);
         }
