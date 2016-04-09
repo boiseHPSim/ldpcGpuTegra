@@ -552,6 +552,44 @@ int main(int argc, char* argv[])
             printf("(PERF2) LDPC decoder air throughput = %1.3f Mbps\n", debit);
         }
 
+        //
+        // THREE THREAD MODE
+        //
+        if (NUM_ACTIVE_THREADS == 3) 
+		{
+            exec = 0;
+            omp_set_num_threads(3);
+            CTimerCpu t_Timer3(true);
+
+            while (t_Timer3.get_time_sec() < t_eval) 
+			{
+                const int looper = 20;
+                #pragma omp parallel sections
+                {
+                    #pragma omp section
+                    {
+                        for (int qq = 0; qq < looper; qq++)
+                            decoder[0]->decode(simu_data[0]->get_t_noise_data(), simu_data[1]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    }
+                    #pragma omp section
+                    {
+                        for (int qq = 0; qq < looper; qq++)
+                            decoder[1]->decode(simu_data[1]->get_t_noise_data(), simu_data[2]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    }
+                    #pragma omp section
+                        {
+                        for (int qq = 0; qq < looper; qq++)
+                            decoder[2]->decode(simu_data[2]->get_t_noise_data(), simu_data[3]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    }
+                }
+                exec += 4 * looper;
+            }
+            t_Timer3.stop();
+
+            float debit = _N * ((exec * NB_THREAD_ON_GPU) / ((float) t_Timer3.get_time_sec()));
+            debit /= 1000000.0f;
+            printf("(PERF4) LDPC decoder air throughput = %1.3f Mbps\n", debit);
+        }
 
         //
         // FOUR THREAD MODE

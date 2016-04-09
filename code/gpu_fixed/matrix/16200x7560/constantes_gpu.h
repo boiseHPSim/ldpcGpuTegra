@@ -10,8 +10,8 @@
 
 #define largeur_bus 32 //en nb de bits
 
-#define N                    16200 // Nombre de Variables
-#define K                    7560 // Nombre de Checks   
+#define _N                    16200 // Nombre de Variables
+#define _K                    7560 // Nombre de Checks   
 #define ONE_COUNT            75239 // Nombre de Messages 
 #define nb_MAX_un_dans_ligne 10
 #define nb_FU                79

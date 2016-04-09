@@ -384,6 +384,7 @@ int main(int argc, char* argv[]) {
     CErrorAnalyzer* errCounter[MAX_THREADS];
 
     double Eb_N0 = p_simulation.snr_min;
+	if(STOP_TIMER_SECOND==-1)
     while (Eb_N0 <= p_simulation.snr_max) {
 
         //
@@ -646,6 +647,159 @@ int main(int argc, char* argv[]) {
             }
         }
 
+    }
+    
+       ////////////////////////////////////////////////////////////////////////////////
+    //
+    //
+    // SECOND EVALUATION OF THE THROUGHPUT WITHOUT ENCODED FRAME REGENERATION
+    //
+    //
+    if( STOP_TIMER_SECOND != -1 )
+    {
+        int exec = 0;
+        const int t_eval = STOP_TIMER_SECOND;
+
+
+        //
+        // ONE THREAD MODE
+        //
+        if (NUM_ACTIVE_THREADS == 1) 
+		{
+            CTimerCpu t_Timer1(true);
+            while (t_Timer1.get_time_sec() < t_eval) 
+			{
+                for (int qq = 0; qq < 20; qq++) 
+				{
+                    // to limit timer runtime impact on performances (for very small LDPC codes)
+                    // Indeed, depending on OS and CTimer implementations, time read can be long...
+                    decoder[0]->decode(simu_data[0]->get_t_noise_data(), simu_data[0]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    exec += 1;
+                }
+            }
+            t_Timer1.stop();
+            float debit = _N * ((exec * nb_frames ) / ((float) t_Timer1.get_time_sec()));
+            debit /= 1000000.0f;
+            printf("(PERF1) LDPC decoder air throughput = %1.6f Mbps\n", debit);
+        }
+
+        //
+        // TWO THREAD MODE
+        //
+        if (NUM_ACTIVE_THREADS == 2) {
+            exec = 0;
+            omp_set_num_threads(2);
+            CTimerCpu t_Timer2(true);
+
+            while (t_Timer2.get_time_sec() < t_eval) 
+			{
+                const int looper = 20;
+                #pragma omp parallel sections
+                {
+                    #pragma omp section
+                    {
+                        for (int qq = 0; qq < looper; qq++)
+                            decoder[0]->decode(simu_data[0]->get_t_noise_data(), simu_data[1]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    }
+                    #pragma omp section
+                    {
+                        for (int qq = 0; qq < looper; qq++)
+                            decoder[1]->decode(simu_data[1]->get_t_noise_data(), simu_data[2]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    }
+                }
+                exec += 2 * looper;
+            }
+            t_Timer2.stop();
+
+            // for each decoder run, we decoded nb_frames codewords (depending on the SIMD width)
+            float debit = _N * ((exec * nb_frames) / ((float) t_Timer2.get_time_sec()));
+            debit /= 1000000.0f;
+            printf("(PERF2) LDPC decoder air throughput = %1.3f Mbps\n", debit);
+        }
+
+        //
+        // THREE THREAD MODE
+        //
+        if (NUM_ACTIVE_THREADS == 3) 
+		{
+            exec = 0;
+            omp_set_num_threads(3);
+            CTimerCpu t_Timer3(true);
+
+            while (t_Timer3.get_time_sec() < t_eval) 
+			{
+                const int looper = 20;
+                #pragma omp parallel sections
+                {
+                    #pragma omp section
+                    {
+                        for (int qq = 0; qq < looper; qq++)
+                            decoder[0]->decode(simu_data[0]->get_t_noise_data(), simu_data[1]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    }
+                    #pragma omp section
+                    {
+                        for (int qq = 0; qq < looper; qq++)
+                            decoder[1]->decode(simu_data[1]->get_t_noise_data(), simu_data[2]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    }
+                    #pragma omp section
+                        {
+                        for (int qq = 0; qq < looper; qq++)
+                            decoder[2]->decode(simu_data[2]->get_t_noise_data(), simu_data[3]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    }
+                }
+                exec += 4 * looper;
+            }
+            t_Timer3.stop();
+
+            float debit = _N * ((exec * nb_frames) / ((float) t_Timer3.get_time_sec()));
+            debit /= 1000000.0f;
+            printf("(PERF4) LDPC decoder air throughput = %1.3f Mbps\n", debit);
+        }
+
+        //
+        // FOUR THREAD MODE
+        //
+        if (NUM_ACTIVE_THREADS == 4) 
+		{
+            exec = 0;
+            omp_set_num_threads(4);
+            CTimerCpu t_Timer3(true);
+
+            while (t_Timer3.get_time_sec() < t_eval) 
+			{
+                const int looper = 20;
+                #pragma omp parallel sections
+                {
+                    #pragma omp section
+                    {
+                        for (int qq = 0; qq < looper; qq++)
+                            decoder[0]->decode(simu_data[0]->get_t_noise_data(), simu_data[1]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    }
+                    #pragma omp section
+                    {
+                        for (int qq = 0; qq < looper; qq++)
+                            decoder[1]->decode(simu_data[1]->get_t_noise_data(), simu_data[2]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    }
+                    #pragma omp section
+                        {
+                        for (int qq = 0; qq < looper; qq++)
+                            decoder[2]->decode(simu_data[2]->get_t_noise_data(), simu_data[3]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    }
+                    #pragma omp section
+                    {
+                        for (int qq = 0; qq < looper; qq++)
+                            decoder[3]->decode(simu_data[3]->get_t_noise_data(), simu_data[4]->get_t_decode_data(), NOMBRE_ITERATIONS);
+                    }
+                }
+                exec += 4 * looper;
+            }
+            t_Timer3.stop();
+
+            float debit = _N * ((exec * nb_frames) / ((float) t_Timer3.get_time_sec()));
+            debit /= 1000000.0f;
+            printf("(PERF4) LDPC decoder air throughput = %1.3f Mbps\n", debit);
+        }
+        exit(0);
     }
 
 //     ON FAIT LE MENAGE PARMIS TOUS LES OBJETS CREES DYNAMIQUEMENT...

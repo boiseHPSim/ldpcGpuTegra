@@ -127,8 +127,8 @@ void CDecoder_OMS_fixed_NEON16_v2::setOffset(int _offset)
 
 void CDecoder_OMS_fixed_NEON16_v2::decode(signed char Intrinsic_fix[], signed char Rprime_fix[], int nombre_iterations)
 {
-//	decode_8bits(Intrinsic_fix, Rprime_fix, nombre_iterations);
-	decode_8bits_test(Intrinsic_fix, Rprime_fix, nombre_iterations);
+	decode_8bits(Intrinsic_fix, Rprime_fix, nombre_iterations);
+// 	decode_8bits_test(Intrinsic_fix, Rprime_fix, nombre_iterations);
 }
 
 bool CDecoder_OMS_fixed_NEON16_v2::decode_8bits(signed char Intrinsic_fix[], signed char Rprime_fix[], int nombre_iterations)
