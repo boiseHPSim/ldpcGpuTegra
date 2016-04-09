@@ -666,7 +666,7 @@ int main(int argc, char* argv[]) {
         //
         if (NUM_ACTIVE_THREADS == 1) 
 		{
-            CTimerCpu t_Timer1(true);
+            CTimer t_Timer1(true);
             while (t_Timer1.get_time_sec() < t_eval) 
 			{
                 for (int qq = 0; qq < 20; qq++) 
@@ -689,7 +689,7 @@ int main(int argc, char* argv[]) {
         if (NUM_ACTIVE_THREADS == 2) {
             exec = 0;
             omp_set_num_threads(2);
-            CTimerCpu t_Timer2(true);
+            CTimer t_Timer2(true);
 
             while (t_Timer2.get_time_sec() < t_eval) 
 			{
@@ -724,7 +724,7 @@ int main(int argc, char* argv[]) {
 		{
             exec = 0;
             omp_set_num_threads(3);
-            CTimerCpu t_Timer3(true);
+            CTimer t_Timer3(true);
 
             while (t_Timer3.get_time_sec() < t_eval) 
 			{
@@ -763,7 +763,7 @@ int main(int argc, char* argv[]) {
 		{
             exec = 0;
             omp_set_num_threads(4);
-            CTimerCpu t_Timer3(true);
+            CTimer t_Timer3(true);
 
             while (t_Timer3.get_time_sec() < t_eval) 
 			{
