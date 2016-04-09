@@ -655,7 +655,7 @@ int main(int argc, char* argv[]) {
     // SECOND EVALUATION OF THE THROUGHPUT WITHOUT ENCODED FRAME REGENERATION
     //
     //
-    if( STOP_TIMER_SECOND != -1 )
+    if( 0 )
     {
         int exec = 0;
         const int t_eval = STOP_TIMER_SECOND;
