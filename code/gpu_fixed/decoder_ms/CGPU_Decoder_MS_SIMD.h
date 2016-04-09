@@ -8,5 +8,7 @@ public:
     ~CGPU_Decoder_MS_SIMD();
     void initialize();
     void decode(float var_nodes[_N], int Rprime_fix[_N], int nombre_iterations);
+	void decode_testStream(float Intrinsic_fix[4000], int Rprime_fix[4000], int nombre_iterations);
+    void decode_stream(float var_nodes[4000], int Rprime_fix[4000], int nombre_iterations);
 };
 

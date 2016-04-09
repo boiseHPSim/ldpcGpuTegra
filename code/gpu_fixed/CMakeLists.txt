@@ -19,6 +19,7 @@ set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall  -fopenmp  -O3 -march=native -m64"
 set(CUDA_NVCC_FLAGS
     ${CUDA_NVCC_FLAGS}
     -arch=sm_50
+#     -default-stream per-thread
     )
 
 set(srcs

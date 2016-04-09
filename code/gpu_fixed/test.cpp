@@ -288,10 +288,12 @@ int main(int argc, char* argv[])
         
         
     Eb_N0 = MinSignalSurBruit;
-    int temps = 0, fdecoding = 0;
+    long int temps = 0, fdecoding = 0;
         
     CErrorAnalyzer* errCounter[MAX_THREADS];
     
+	long int etime[MAX_THREADS] = {0, 0, 0, 0};
+	
     while (Eb_N0 <= MaxSignalSurBruit)
     {
 
@@ -331,13 +333,13 @@ int main(int argc, char* argv[])
             errCounter[i]->store_enc_bits();
         }
         
-        CTimer timer[MAX_THREADS];
-        long int etime[MAX_THREADS] = {0, 0, 0, 0};
+//         CTimer timer[MAX_THREADS];
+        
 
-        CTimer biais_measure(false);
-        biais_measure.start();
+//         CTimer biais_measure(false);
+//         biais_measure.start();
 //         biais_measure.stop();
-        unsigned int biais = biais_measure.get_time_us();
+//         unsigned int biais = biais_measure.get_time_us();
 
         //
         
@@ -345,28 +347,47 @@ int main(int argc, char* argv[])
         {         
             #pragma omp section
             {
-				std::cerr << "number 00000000000000000" << endl;
-                timer[0].start();
-                decoder[0]->decode( simu_data[0]->get_t_noise_data(), simu_data[0]->get_t_decode_data(), NOMBRE_ITERATIONS );
-//                 timer[0].stop();
-                etime[0] += (timer[0].get_time_us() - biais);
+                CTimer essai(true);
+				decoder[0]->decode_stream( simu_data[0]->get_t_noise_data(), simu_data[0]->get_t_decode_data(), NOMBRE_ITERATIONS );
+                etime[0] += essai.get_time_us();
                 noise[0]->generate();  // ON GENERE LE BRUIT DU CANAL
                 errCounter[0]->generate();
-//                 fdecoding += 1;
+				#pragma omp atomic
+                fdecoding += 1;
             }
             
             #pragma omp section
             {
-				std::cerr << "number 111111111111111111" << endl;
-                timer[1].start();
-                decoder[1]->decode( simu_data[1]->get_t_noise_data(), simu_data[1]->get_t_decode_data(), NOMBRE_ITERATIONS );
-//                 timer[0].stop();
-                etime[1] += (timer[1].get_time_us() - biais);
+                CTimer essai(true);
+                decoder[1]->decode_stream( simu_data[1]->get_t_noise_data(), simu_data[1]->get_t_decode_data(), NOMBRE_ITERATIONS );
+                etime[1] += essai.get_time_us();
                 noise[1]->generate();  // ON GENERE LE BRUIT DU CANAL
                 errCounter[1]->generate();
-//                 fdecoding += 1;
+				#pragma omp atomic
+                fdecoding += 1;
             }
             
+            #pragma omp section
+            {
+                CTimer essai(true);
+				decoder[2]->decode_stream( simu_data[2]->get_t_noise_data(), simu_data[2]->get_t_decode_data(), NOMBRE_ITERATIONS );
+                etime[2] += essai.get_time_us();
+                noise[2]->generate();  // ON GENERE LE BRUIT DU CANAL
+                errCounter[2]->generate();
+				#pragma omp atomic
+                fdecoding += 1;
+            }
+            
+            #pragma omp section
+            {
+                CTimer essai(true);
+                decoder[3]->decode_stream( simu_data[3]->get_t_noise_data(), simu_data[3]->get_t_decode_data(), NOMBRE_ITERATIONS );
+                etime[3] += essai.get_time_us();
+                noise[3]->generate();  // ON GENERE LE BRUIT DU CANAL
+                errCounter[3]->generate();
+				#pragma omp atomic
+                fdecoding += 1;
+            }
             
         }
         
@@ -395,9 +416,9 @@ int main(int argc, char* argv[])
         if( (simu_timer.get_time_sec() >= STOP_TIMER_SECOND) && (STOP_TIMER_SECOND != -1) )
         {
             printf("(II) THE SIMULATION HAS STOP DUE TO THE (USER) TIME CONTRAINT.\n");
-            printf("(II) PERFORMANCE EVALUATION WAS PERFORMED ON %d RUNS, TOTAL TIME = %dms\n", fdecoding, temps);
+            printf("(II) PERFORMANCE EVALUATION WAS PERFORMED ON %d RUNS, TOTAL TIME = %dms\n", fdecoding, temps/1000);
                     temps /= fdecoding;
-            printf("(II) + TIME / RUN = %dms\n", temps);
+            printf("(II) + TIME / RUN = %dms\n", temps/1000);
             int   workL = 4 * NB_THREAD_ON_GPU;
             int   kbits = workL * _N / temps ;
             float mbits = ((float)kbits) / 1000.0;
@@ -429,7 +450,49 @@ int main(int argc, char* argv[])
         	}
         }
 	}
+	
+	    if(1)
+        {
+            printf("FINAL REPORT.\n");
+// 			int tempDum = 0;
+// 			for(int i=0;i<4.i++)
+			temps = etime[0];
+            printf("(II) PERFORMANCE EVALUATION WAS PERFORMED ON %d RUNS, TOTAL TIME = %dms\n", fdecoding, temps/1000);
+                    temps /= fdecoding;
+            printf("(II) + TIME / RUN = %dms\n", temps/1000);
+            int   workL = NUM_ACTIVE_THREADS * NB_THREAD_ON_GPU;
+			int flt = sizeof(float);
+			temps /= 1000;
+            float   kbits = ((float)(workL * _N / temps) );
+            float mbits = ((float)kbits/1000.0);
+            printf("(II) + DECODER LATENCY (ms)     = %d\n", temps/1000);
+            printf("(II) + DECODER THROUGHPUT (Mbps)= %.1f\n", mbits);
+            printf("(II) + (%.2fdB, %dThd : %dCw, %dits) THROUGHPUT = %.1f\n", Eb_N0, NB_THREAD_ON_GPU, workL, NOMBRE_ITERATIONS, mbits);
+                cout << endl << "Temps = " << temps/1000 << "ms : " << mbits*1000;
+                cout << "kb/s : " << ((float)(temps/1000)/NB_THREAD_ON_GPU) << "ms/frame" << endl << endl;
+        }
 
+        if(0)
+        {
+            printf("FINAL REPORT.\n");
+// 			int tempDum = 0;
+// 			for(int i=0;i<4.i++)
+			temps = etime[0];
+            printf("(II) PERFORMANCE EVALUATION WAS PERFORMED ON %d RUNS, TOTAL TIME = %dms\n", fdecoding, temps/1000);
+                    temps /= fdecoding;
+            printf("(II) + TIME / RUN = %dms\n", temps/1000);
+            int   workL = 4 * NB_THREAD_ON_GPU;
+            int   kbits =  (workL * _N * 1000 * NUM_ACTIVE_THREADS)/ (temps) ;
+			printf("TIME = %ld\n", temps);
+			printf("KBPS = %d\n", kbits);
+            float mbits = ((float)kbits) / 1000.0;
+            printf("(II) + DECODER LATENCY (ms)     = %d\n", temps/1000);
+            printf("(II) + DECODER THROUGHPUT (Mbps)= %.1f\n", mbits);
+            printf("(II) + (%.2fdB, %dThd : %dCw, %dits) THROUGHPUT = %.1f\n", Eb_N0, NB_THREAD_ON_GPU, workL, NOMBRE_ITERATIONS, mbits);
+                cout << endl << "Temps = " << temps << "ms : " << kbits;
+                cout << "kb/s : " << ((float)temps/NB_THREAD_ON_GPU) << "ms/frame" << endl << endl;
+        }
       
+//  cudaProfilerStop();
  return 0;
 }

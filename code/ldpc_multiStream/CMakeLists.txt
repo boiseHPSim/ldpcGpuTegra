@@ -9,17 +9,16 @@ ${CMAKE_SOURCE_DIR}
 )
 
 link_directories(
-"/usr/local/cuda/lib/"
+"/usr/local/cuda/lib64/"
 )
 
 # set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-Wall")
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall  -fopenmp")
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall  -fopenmp -O3 -march=native -m64")
 
 # Pass options to NVCC
 set(CUDA_NVCC_FLAGS
     ${CUDA_NVCC_FLAGS}
-    -O2
-    -arch=sm_21
+    -arch=sm_50
     )
 
 set(srcs

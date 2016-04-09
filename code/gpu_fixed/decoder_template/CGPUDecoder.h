@@ -33,6 +33,7 @@ public:
     virtual ~CGPUDecoder();
     virtual void initialize() = 0;
     virtual void decode(float var_nodes[_N], int Rprime_fix[_N], int nombre_iterations) = 0;
+	virtual void decode_stream(float var_nodes[_N], int Rprime_fix[_N], int nombre_iterations);
 };
 
 #endif

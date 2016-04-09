@@ -52,3 +52,9 @@ CGPUDecoder::~CGPUDecoder()
 
     ERROR_CHECK(Status, (char*)__FILE__, __LINE__);
 }
+
+
+void CGPUDecoder::decode_stream(float var_nodes[4000], int Rprime_fix[4000], int nombre_iterations)
+{
+
+}
