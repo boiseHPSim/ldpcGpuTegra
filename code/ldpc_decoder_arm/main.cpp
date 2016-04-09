@@ -384,7 +384,6 @@ int main(int argc, char* argv[]) {
     CErrorAnalyzer* errCounter[MAX_THREADS];
 
     double Eb_N0 = p_simulation.snr_min;
-	if(STOP_TIMER_SECOND==-1)
     while (Eb_N0 <= p_simulation.snr_max) {
 
         //
