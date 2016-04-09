@@ -242,7 +242,9 @@ int main(int argc, char* argv[]) {
             //
             // REGLAGE DES DU MODELE DU CANAL
             //
-        } else if (strcmp(argv[p], "-thread") == 0) {
+        } 
+        else if (strcmp(argv[p], "-thread") == 0) 
+		{
             int nThreads = atoi(argv[p + 1]);
             if (nThreads > 4) {
                 printf("(WW) Number of thread can be higher than 4 => Using 4 threads.");
