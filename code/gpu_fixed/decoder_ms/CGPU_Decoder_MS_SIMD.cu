@@ -20,14 +20,14 @@ CGPU_Decoder_MS_SIMD::CGPU_Decoder_MS_SIMD(size_t _nb_frames, size_t n, size_t k
 CGPUDecoder(_nb_frames, n, k, m)
 {
 	size_t nb_blocks = nb_frames / BLOCK_SIZE;
-	printf("(II) Decoder configuration: BLOCK_SIZE = %ld, nb_frames = %ld, nb_blocks = %ld\n", BLOCK_SIZE, nb_frames, nb_blocks);
+// 	printf("(II) Decoder configuration: BLOCK_SIZE = %ld, nb_frames = %ld, nb_blocks = %ld\n", BLOCK_SIZE, nb_frames, nb_blocks);
 
 	struct cudaDeviceProp devProp;
   	cudaGetDeviceProperties(&devProp, 0);
-  	printf("(II) Identifiant du GPU (CUDA)   : %s\n", devProp.name);
-  	printf("(II) Nombre de Multi-Processor   : %d\n", devProp.multiProcessorCount);
-  	printf("(II) Taille de memoire globale   : %ld\n", devProp.totalGlobalMem);
-  	printf("(II) Taille de sharedMemPerBlock : %ld\n", devProp.sharedMemPerBlock);
+//   	printf("(II) Identifiant du GPU (CUDA)   : %s\n", devProp.name);
+//   	printf("(II) Nombre de Multi-Processor   : %d\n", devProp.multiProcessorCount);
+//   	printf("(II) Taille de memoire globale   : %ld\n", devProp.totalGlobalMem);
+//   	printf("(II) Taille de sharedMemPerBlock : %ld\n", devProp.sharedMemPerBlock);
 /*  	
         int regsPerBlock;
         int warpSize;
@@ -50,38 +50,41 @@ CGPUDecoder(_nb_frames, n, k, m)
   	int nBperMP  = 65536 / (attr.numRegs); 	// Nr of blocks per MP
   	int minB     = min(nBperMP*nThreads,1024);
   	int nBlocks  = max(minB/nThreads * nMP, nDOF/nThreads);  //Total number of blocks
-  	printf("(II) Nombre de Warp    : %d\n", nWarp);
-  	printf("(II) Nombre de Threads           : %d\n", nThreads);
+	if(0)
+	{
+		printf("(II) Nombre de Warp    : %d\n", nWarp);
+		printf("(II) Nombre de Threads           : %d\n", nThreads);
 
-  	printf("(II) LDPC_Sched_Stage_1_MS_SIMD :\n");
-  	printf("(II) - Nombre de regist/thr : %d\n", attr.numRegs);
-  	printf("(II) - Nombre de local/thr  : %ld\n", attr.localSizeBytes);
-  	printf("(II) - Nombre de shared/thr : %ld\n", attr.sharedSizeBytes);
+		printf("(II) LDPC_Sched_Stage_1_MS_SIMD :\n");
+		printf("(II) - Nombre de regist/thr : %d\n", attr.numRegs);
+		printf("(II) - Nombre de local/thr  : %ld\n", attr.localSizeBytes);
+		printf("(II) - Nombre de shared/thr : %ld\n", attr.sharedSizeBytes);
 
-	printf("(II) Number of attr.reg: %d\n", nDOF);
-  	printf("(II) Nombre de nDOF    : %d\n", nDOF);
-  	printf("(II) Nombre de nBperMP : %d\n", nBperMP);
-  	printf("(II) Nombre de nBperMP : %d\n", minB);
-  	printf("(II) Nombre de nBperMP : %d\n", nBlocks);
-  	printf("(II) Best BLOCK_SIZE   : %d\n", nThreads * nBperMP);
-  	printf("(II) Best #codewords   : %d\n", 0);
+		printf("(II) Number of attr.reg: %d\n", nDOF);
+		printf("(II) Nombre de nDOF    : %d\n", nDOF);
+		printf("(II) Nombre de nBperMP : %d\n", nBperMP);
+		printf("(II) Nombre de nBperMP : %d\n", minB);
+		printf("(II) Nombre de nBperMP : %d\n", nBlocks);
+		printf("(II) Best BLOCK_SIZE   : %d\n", nThreads * nBperMP);
+		printf("(II) Best #codewords   : %d\n", 0);
 
-  	if( attr.numRegs <= 32 ){
-	  	printf("(II) Best BLOCK_SIZE   : %d\n", 128);
-	  	printf("(II) Best BLOCK_SIZE   : %d\n", nBperMP/256);
-  	}else if( attr.numRegs <= 40 ){
-	  	printf("(II) Best BLOCK_SIZE   : %d\n", 96);
-	  	printf("(II) Best BLOCK_SIZE   : %d\n", nBperMP/256);
-  	}else if( attr.numRegs <= 48 ){
-	  	printf("(II) Best BLOCK_SIZE   : %d\n", 128);
-	  	printf("(II) Best BLOCK_SIZE   : %d\n", nBperMP/256);
-  	}else if( attr.numRegs < 64 ){
-	  	printf("(II) Best BLOCK_SIZE   : %d\n", 96);
-	  	printf("(II) Best BLOCK_SIZE   : %d\n", nBperMP/256);
-  	}else{
-	  	printf("(II) Best BLOCK_SIZE   : ???\n");
-// 	  	exit( 0 );
-  	}
+		if( attr.numRegs <= 32 ){
+			printf("(II) Best BLOCK_SIZE   : %d\n", 128);
+			printf("(II) Best BLOCK_SIZE   : %d\n", nBperMP/256);
+		}else if( attr.numRegs <= 40 ){
+			printf("(II) Best BLOCK_SIZE   : %d\n", 96);
+			printf("(II) Best BLOCK_SIZE   : %d\n", nBperMP/256);
+		}else if( attr.numRegs <= 48 ){
+			printf("(II) Best BLOCK_SIZE   : %d\n", 128);
+			printf("(II) Best BLOCK_SIZE   : %d\n", nBperMP/256);
+		}else if( attr.numRegs < 64 ){
+			printf("(II) Best BLOCK_SIZE   : %d\n", 96);
+			printf("(II) Best BLOCK_SIZE   : %d\n", nBperMP/256);
+		}else{
+			printf("(II) Best BLOCK_SIZE   : ???\n");
+	// 	  	exit( 0 );
+		}
+	}
 
 }
 

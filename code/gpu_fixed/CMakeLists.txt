@@ -19,7 +19,7 @@ set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall  -fopenmp  -O3 -march=native -m64 
 # Pass options to NVCC
 set(CUDA_NVCC_FLAGS
     ${CUDA_NVCC_FLAGS}
-    -arch=sm_50
+    -arch=sm_21
 #     -default-stream per-thread
     )
 
@@ -32,6 +32,7 @@ set(srcs
 	tools/debug_fx.cpp
 	decoder_template/CGPUDecoder.cpp
 	matrix/constantes_decoder.cpp
+	timer/CTimerCpu.cpp
 )
 
 set(hdrs
@@ -72,6 +73,7 @@ set(hdrs
 	tools/debug_fx.h
 	trame/CTrame.h
 	timer/CTimer.h
+	timer/CTimerCpu.h
 )
 
 set(kernels

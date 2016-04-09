@@ -32,6 +32,7 @@ using namespace std;
 //#define pi  3.1415926536
 
 #include "./timer/CTimer.h"
+#include "timer/CTimerCpu.h"
 #include "./trame/CTrame.h"
 #include "./awgn_channel/CChanel_AWGN_SIMD.h"
 #include "./ber_analyzer/CErrorAnalyzer.h"
@@ -500,10 +501,10 @@ int main(int argc, char* argv[])
         //
         if (NUM_ACTIVE_THREADS == 1) 
 		{
-            CTimer t_Timer1(true);
+            CTimerCpu t_Timer1(true);
             while (t_Timer1.get_time_sec() < t_eval) 
 			{
-                for (int qq = 0; qq < 256; qq++) 
+                for (int qq = 0; qq < 20; qq++) 
 				{
                     // to limit timer runtime impact on performances (for very small LDPC codes)
                     // Indeed, depending on OS and CTimer implementations, time read can be long...
@@ -511,7 +512,7 @@ int main(int argc, char* argv[])
                     exec += 1;
                 }
             }
-//             t_Timer1.stop();
+            t_Timer1.stop();
             float debit = _N * ((exec * NB_THREAD_ON_GPU ) / ((float) t_Timer1.get_time_sec()));
             debit /= 1000000.0f;
             printf("(PERF1) LDPC decoder air throughput = %1.6f Mbps\n", debit);
@@ -523,11 +524,11 @@ int main(int argc, char* argv[])
         if (NUM_ACTIVE_THREADS == 2) {
             exec = 0;
             omp_set_num_threads(2);
-            CTimer t_Timer2(true);
+            CTimerCpu t_Timer2(true);
 
             while (t_Timer2.get_time_sec() < t_eval) 
 			{
-                const int looper = 256;
+                const int looper = 20;
                 #pragma omp parallel sections
                 {
                     #pragma omp section
@@ -543,7 +544,7 @@ int main(int argc, char* argv[])
                 }
                 exec += 2 * looper;
             }
-//             t_Timer2.stop();
+            t_Timer2.stop();
 
             // for each decoder run, we decoded nb_frames codewords (depending on the SIMD width)
             float debit = _N * ((exec * NB_THREAD_ON_GPU) / ((float) t_Timer2.get_time_sec()));
@@ -559,11 +560,11 @@ int main(int argc, char* argv[])
 		{
             exec = 0;
             omp_set_num_threads(4);
-            CTimer t_Timer3(true);
+            CTimerCpu t_Timer3(true);
 
             while (t_Timer3.get_time_sec() < t_eval) 
 			{
-                const int looper = 256;
+                const int looper = 20;
                 #pragma omp parallel sections
                 {
                     #pragma omp section
@@ -589,7 +590,7 @@ int main(int argc, char* argv[])
                 }
                 exec += 4 * looper;
             }
-//             t_Timer3.stop();
+            t_Timer3.stop();
 
             float debit = _N * ((exec * NB_THREAD_ON_GPU) / ((float) t_Timer3.get_time_sec()));
             debit /= 1000000.0f;

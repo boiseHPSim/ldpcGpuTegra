@@ -23,11 +23,11 @@ CGPUDecoder::CGPUDecoder(size_t _nb_frames, size_t n, size_t k, size_t m)
 
 	size_t s = (2 * n + m) * sizeof(float);
 	size_t o = ((2 * sz_nodes + m + sz_msgs)/1024)*4;
-	printf("(GPU) Memory per decoder : %d ko (%d Mo)\n", s/1024, s/1024/1024);
-	printf("(GPU) Allocated memory   : %d Mbytes (%d frames)\n", o/1024, nb_frames);
-	printf("(GPU)   +> iLLR memory   : %d Mbytes\n", (sz_nodes) * sizeof(float) / 1024 / 1024);
-	printf("(GPU)   +> eLLR memory   : %d Mbytes\n", (sz_nodes) * sizeof(float) / 1024 / 1024);
-	printf("(GPU)   +> Msgs memory   : %d Mbytes\n", (sz_msgs)  * sizeof(float) / 1024 / 1024);
+	printf("(GPU) Memory per decoder : %d ko (%d Mo)\n", (s+o)/1024, (s+o)/1024/1024);
+// 	printf("(GPU) Allocated memory   : %d Mbytes (%d frames)\n", o/1024, nb_frames);
+// 	printf("(GPU)   +> iLLR memory   : %d Mbytes\n", (sz_nodes) * sizeof(float) / 1024 / 1024);
+// 	printf("(GPU)   +> eLLR memory   : %d Mbytes\n", (sz_nodes) * sizeof(float) / 1024 / 1024);
+// 	printf("(GPU)   +> Msgs memory   : %d Mbytes\n", (sz_msgs)  * sizeof(float) / 1024 / 1024);
 
     CUDA_MALLOC_DEVICE(&d_transpose, m, __FILE__, __LINE__);
     Status = cudaMemcpy(d_transpose, PosNoeudsVariable, m * sizeof(unsigned int), cudaMemcpyHostToDevice);

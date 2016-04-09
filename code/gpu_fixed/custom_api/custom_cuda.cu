@@ -1,6 +1,6 @@
 #include "custom_cuda.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 bool ERROR_CHECK(cudaError_t Status, string file, int line)
 {
