@@ -293,6 +293,7 @@ int main(int argc, char* argv[])
     CErrorAnalyzer* errCounter[MAX_THREADS];
     
 	long int etime[MAX_THREADS] = {0, 0, 0, 0};
+    CErrorAnalyzer errCounters(simu_data[0], FRAME_ERROR_LIMIT, false, false);
 	if(STOP_TIMER_SECOND == -1)
     while (Eb_N0 <= MaxSignalSurBruit)
     {
@@ -307,7 +308,6 @@ int main(int argc, char* argv[])
         CTimer temps_ecoule(true);
 		CTimer term_refresh(true);
 
-        CErrorAnalyzer errCounters(simu_data[0], FRAME_ERROR_LIMIT, false, false);
         for(int i=0; i<4; i++)
         {
             errCounter[i] = new CErrorAnalyzer(simu_data[i], FRAME_ERROR_LIMIT, true, true);
@@ -395,7 +395,8 @@ int main(int argc, char* argv[])
         // ON COMPTE LE NOMBRE D'ERREURS DANS LA TRAME DECODE
         //
         errCounters.reset_internals();
-        errCounters.accumulate( errCounter[0]);
+		for(int i=0;i<4;i++)
+			errCounters.accumulate( errCounter[i]);
 
         //
         // ON compare le Frame Error avec la limite imposee par l'utilisateur. Si on depasse
@@ -413,23 +414,6 @@ int main(int argc, char* argv[])
 	        terminal.temp_report();
 		}
         
-        if( (simu_timer.get_time_sec() >= STOP_TIMER_SECOND) && (STOP_TIMER_SECOND != -1) )
-        {
-            printf("(II) THE SIMULATION HAS STOP DUE TO THE (USER) TIME CONTRAINT.\n");
-            printf("(II) PERFORMANCE EVALUATION WAS PERFORMED ON %d RUNS, TOTAL TIME = %dms\n", fdecoding, temps/1000);
-                    temps /= fdecoding;
-            printf("(II) + TIME / RUN = %dms\n", temps/1000);
-            int   workL = 4 * NB_THREAD_ON_GPU;
-            int   kbits = workL * _N / temps ;
-            float mbits = ((float)kbits) / 1000.0;
-            printf("(II) + DECODER LATENCY (ms)     = %d\n", temps);
-            printf("(II) + DECODER THROUGHPUT (Mbps)= %.1f\n", mbits);
-            printf("(II) + (%.2fdB, %dThd : %dCw, %dits) THROUGHPUT = %.1f\n", Eb_N0, NB_THREAD_ON_GPU, workL, NOMBRE_ITERATIONS, mbits);
-                cout << endl << "Temps = " << temps << "ms : " << kbits;
-                cout << "kb/s : " << ((float)temps/NB_THREAD_ON_GPU) << "ms/frame" << endl << endl;
-			std::cerr <<  "got out of loop !!" << __LINE__ << std::endl;
-            break;
-        }
         
         terminal.final_report();
 
@@ -454,13 +438,18 @@ int main(int argc, char* argv[])
 	    if(STOP_TIMER_SECOND==-1)
         {
             printf("FINAL REPORT.\n");
-// 			int tempDum = 0;
-// 			for(int i=0;i<4.i++)
-			temps = etime[0];
+			long int tempDum = 0;
+			for(int i=0;i<4;i++)
+			{
+				tempDum += etime[i];
+			}
+			temps = tempDum / 4;
+			
             printf("(II) PERFORMANCE EVALUATION WAS PERFORMED ON %d RUNS, TOTAL TIME = %dms\n", fdecoding, temps/1000);
                     temps /= fdecoding;
+			
             printf("(II) + TIME / RUN = %dms\n", temps/1000);
-            int   workL = NUM_ACTIVE_THREADS * NB_THREAD_ON_GPU;
+            int   workL =  errCounters.nb_processed_frames();// NUM_ACTIVE_THREADS * NB_THREAD_ON_GPU;
 			int flt = sizeof(float);
 			temps /= 1000;
             float   kbits = ((float)(workL * _N / temps) );
