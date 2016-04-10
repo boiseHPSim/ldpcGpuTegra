@@ -103,7 +103,7 @@
 % in the abstract
 \begin{abstract}
 
-Low density parity check (LDPC) codes have been extensively applied in mobile communication systems due to their excellent error correcting capabilities. However, their wide adoption has been hindered by the high complexity of the LDPC decoder. Although to date, dedicated hardware has been used to implement low latency LDPC decoders, recent advancements in the architecture of mobile processors has made it possible to develop software solutions. Here, unlike prior solutions that are based on either graphic processing units (GPUs) or advanced RISC machine (ARM) architectures, we propose a heterogeneous LDPC decoder that uses both the ARM and GPU processors of a mobile device to achieve efficient real-time decoding. The proposed solution is implemented on an NVIDIA development kit, where our results indicate that we can reduce the load on either the GPU or the ARM processor through the proposed heterogeneous structure, which in turn allows these resources to support other applications, simultaneously.
+Low density parity check (LDPC) codes have been extensively applied in mobile communication systems due to their excellent error correcting capabilities. However, their wide adoption has been hindered by the high complexity of the LDPC decoder. Although to date, dedicated hardware has been used to implement low latency LDPC decoders, recent advancements in the architecture of mobile processors has made it possible to develop software solutions. Here, unlike prior solutions that are based on either graphic processing units (GPUs) or advanced RISC machine (ARM) architectures, we propose a heterogeneous LDPC decoder that uses both ARM and GPU processors of a mobile device to achieve efficient real-time decoding. The proposed solution is implemented on an NVIDIA development board, where our results indicate that we can reduce the load on either the GPU or the ARM processor through the proposed heterogeneous structure, which in turn allows both processors to support other applications.
 
 \end{abstract}
 
@@ -329,7 +329,7 @@ GPU devices have different characteristics: amount of stream multiprocessors, CU
 \caption{Throughput (\textit{Mbps}) of algorithm on different GPUs}\label{table:gpus}
 \begin{tabular}{@{}cc|c|cc@{}}
 \toprule
-\textbf{code}                        & \textbf{target}                    & \textbf{iter} & \multirow{2}{*}\textbf{\#1 thread} & \multirow{2}{*}\textbf{\#3 thread}  \\ \midrule
+\textbf{code}                        & \textbf{target}                    & \textbf{iter} & \textit{Mbps} (1-thread}) & \textit{Mbps} (3-thread)  \\ \midrule
 \multirow{8}{*}{\textbf{(576,288)}}  & \multirow{2}{*}{\textbf{GT540M}}   & \textbf{10}   & \textbf{23}  & \textbf{33}   \\ \cmidrule(l){3-5} 
                                      &                                    & \textbf{5}    & \textbf{44}  & \textbf{61}   \\ \cmidrule(l){2-5} 
                                      & \multirow{2}{*}{\textbf{K620}}     & \textbf{10}   & \textbf{23}  & \textbf{30}   \\ \cmidrule(l){3-5} 
