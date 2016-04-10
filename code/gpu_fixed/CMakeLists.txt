@@ -14,13 +14,15 @@ link_directories(
 
 # set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-Wall")
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall  -fopenmp  -O3 -march=native -m64 -finline -funroll-loops")
+
+#the following flags are used for ARM devices
 # set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall -fopenmp -O3 -march=native -mtune=cortex-a15 -marm -mfpu=neon -finline -funroll-loops -flax-vector-conversions")
 
 # Pass options to NVCC
 set(CUDA_NVCC_FLAGS
     ${CUDA_NVCC_FLAGS}
     -arch=sm_21
-#     -default-stream per-thread
+#     -default-stream per-thread // This is for making multiple streams using cuda>=7.0
     )
 
 set(srcs
